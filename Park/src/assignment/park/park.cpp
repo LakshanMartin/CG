@@ -543,6 +543,8 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
 
     // Horizontal Pole
     glm::mat4 horizonPoleObj = glm::mat4();
+
+    // Check which basketball ring to draw 
     if(isSecond)
     {
         horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.75f, z - 0.2f));
@@ -563,6 +565,8 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
 
     // Front of backboard
     glm::mat4 frontBoardObj = glm::mat4();
+
+    // Check which basketball ring to draw
     if(isSecond)
     {
         frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.0f, z - 0.5f));
@@ -584,6 +588,8 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
 
     // Back of backboard
     glm::mat4 backBoardObj = glm::mat4();
+
+    // Check which basketball ring to draw
     if(isSecond)
     {
         backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.0f, z - 0.45f));
@@ -605,6 +611,8 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
 
     // Top edge of backboard
     glm::mat4 topEdgeBoardObj = glm::mat4();
+
+    // Check which basketball ring to draw
     if(isSecond)
     {
         topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.5f, z - 0.475f));
@@ -626,6 +634,8 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
 
     // Bottom edge of backboard
     glm::mat4 botEdgeBoardObj = glm::mat4();
+
+    // Check which basketball ring to draw
     if(isSecond)
     {
         botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.5f, z - 0.475f));
@@ -643,5 +653,51 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     glBindTexture(GL_TEXTURE_2D, mildSpec);
 
     shader.setMat4("model", botEdgeBoardObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Left edge of backboard
+    glm::mat4 leftEdgeBoardObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.0f, z - 0.475f));
+        leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
+    }
+    else
+    {
+        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.0f, z + 0.475f));
+        leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    shader.setMat4("model", leftEdgeBoardObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Right edge of backboard
+    glm::mat4 rightEdgeBoardObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.0f, z - 0.475f));
+        rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
+    }
+    else
+    {
+        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.0f, z + 0.475f));
+        rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    shader.setMat4("model", rightEdgeBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
