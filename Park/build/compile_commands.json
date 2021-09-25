@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/configuration -I/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/includes  -std=c++11 -g -Wall   -o CMakeFiles/assignment__park.dir/src/assignment/park/park.cpp.o -c /home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/src/assignment/park/park.cpp",
+  "file": "/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/src/assignment/park/park.cpp"
+},
+{
+  "directory": "/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9  -I/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/configuration -I/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/includes  -g   -o CMakeFiles/GLAD.dir/src/glad.c.o   -c /home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/src/glad.c",
+  "file": "/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/src/glad.c"
+},
+{
+  "directory": "/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/configuration -I/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/includes  -std=c++11 -g -Wall   -o CMakeFiles/STB_IMAGE.dir/src/stb_image.cpp.o -c /home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/src/stb_image.cpp",
+  "file": "/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/src/stb_image.cpp"
+}
+]
