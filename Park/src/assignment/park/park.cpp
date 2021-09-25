@@ -94,11 +94,15 @@ int main()
 
     // SETUP TEXTURES -----------------------------------------------------------
     unsigned int noSpec = loadTexture(FileSystem::getPath("resources/textures/no_spec.png").c_str());
-    unsigned int mildSpec = loadTexture(FileSystem::getPath("resources/textures/mild_spec.jpg").c_str());
+    unsigned int mildSpec = loadTexture(FileSystem::getPath("resources/textures/mild_spec.png").c_str());
+    unsigned int highSpec = loadTexture(FileSystem::getPath("resources/textures/high_spec.png").c_str());
     unsigned int grassDiff = loadTexture(FileSystem::getPath("resources/textures/grass.jpg").c_str());
     unsigned int bballCourtDiff = loadTexture(FileSystem::getPath("resources/textures/bball_court.png").c_str());
     unsigned int treeTopDiff = loadTexture(FileSystem::getPath("resources/textures/tree_leaves.jpg").c_str());
     unsigned int treeTrunkDiff = loadTexture(FileSystem::getPath("resources/textures/tree_trunk.png").c_str());
+    unsigned int bballPoleDiff = loadTexture(FileSystem::getPath("resources/textures/bball_pole.png").c_str());
+    unsigned int bballBoardFrontDiff = loadTexture(FileSystem::getPath("resources/textures/bball_board_front.png").c_str());
+    unsigned int bballRingDiff = loadTexture(FileSystem::getPath("resources/textures/bball_ring.png").c_str());
 
 
     // first, configure the cube's VAO (and VBO)
@@ -220,6 +224,7 @@ int main()
         grassDraw(VAO, shader, grassDiff, mildSpec);
         bballCourtDraw(VAO, shader, bballCourtDiff, noSpec);
         treeDraw(VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+        bballRingDraw(VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballRingDiff, highSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -510,5 +515,38 @@ void treeDraw(unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigne
     glBindTexture(GL_TEXTURE_2D, noSpec);
 
     shader.setMat4("model", trunkObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+}
+
+void bballRingDraw(unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballRingDiff, unsigned int highSpec)
+{
+    // Base Pole
+    glBindVertexArray(VAO);
+
+    glm::mat4 basePoleObj = glm::mat4();
+    basePoleObj = glm::translate(basePoleObj, glm::vec3(0.0f, 0.75f, -5.5f));
+    basePoleObj = glm::scale(basePoleObj, glm::vec3(0.1f, 1.5f, 0.1f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballPoleDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", basePoleObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Horizontal Pole
+    glBindVertexArray(VAO);
+
+    glm::mat4 horizonPoleObj = glm::mat4();
+    horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(0.0f, 1.5f, -5.3f));
+    horizonPoleObj = glm::scale(horizonPoleObj, glm::vec3(0.1f, 0.1f, 0.5f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballPoleDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", horizonPoleObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }

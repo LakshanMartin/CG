@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <learnopengl/shader_m.h>
 
-// DECLARATIONS
+// FUNCTION DECLARATIONS
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -14,6 +14,7 @@ void update_delay();
 void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned int mildSpec);
 void bballCourtDraw(unsigned int VAO, Shader shader, unsigned int courtDiff, unsigned int noSpec);
 void treeDraw(unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigned int mildSpec, unsigned int treeTrunkDiff, unsigned int noSpec);
+void bballRingDraw(unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballRingDiff, unsigned int highSpec);
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
 // ------------------------------------------------------------------
