@@ -1,0 +1,6 @@
+# ignore drawing files
+*.drawio
+
+# ignore unnecessary docs
+Declaration_of_Originality_Form.pdf
+OpenGL_Assignment_MarkingGuide.pdf
