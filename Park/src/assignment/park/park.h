@@ -14,7 +14,7 @@ void update_delay();
 void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned int mildSpec);
 void bballCourtDraw(unsigned int VAO, Shader shader, unsigned int courtDiff, unsigned int noSpec);
 void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigned int mildSpec, unsigned int treeTrunkDiff, unsigned int noSpec);
-void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballBoardBackDiff, unsigned int bballBoardEdgeDiff, unsigned int bballRingDiff, unsigned int highSpec);
+void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballBoardBackDiff, unsigned int bballBoardEdgeDiff, unsigned int bballRingDiff, unsigned int highSpec, unsigned int mildSpec);
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
 // ------------------------------------------------------------------

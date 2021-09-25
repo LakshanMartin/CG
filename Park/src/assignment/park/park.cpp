@@ -202,6 +202,9 @@ int main()
         shader.setFloat("light.quadratic", quadAtten[attenIndex]);
 
         // material properties
+        shader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        shader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
         shader.setFloat("material.shininess", 32.0f);
 
         // view/projection transformations
@@ -226,8 +229,8 @@ int main()
         grassDraw(VAO, shader, grassDiff, mildSpec);
         bballCourtDraw(VAO, shader, bballCourtDiff, noSpec);
         treeDraw(3.0f, 1.0f, 0.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-        bballRingDraw(false, 0.0f, 0.75f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec);
-        bballRingDraw(true, 0.0f, 0.75f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec);
+        bballRingDraw(false, 0.0f, 0.75f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
+        bballRingDraw(true, 0.0f, 0.75f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -521,7 +524,7 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     }
 }
 
-void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballBoardBackDiff, unsigned int bballBoardEdgeDiff, unsigned int bballRingDiff, unsigned int highSpec)
+void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballBoardBackDiff, unsigned int bballBoardEdgeDiff, unsigned int bballRingDiff, unsigned int highSpec, unsigned int mildSpec)
 {
     glBindVertexArray(VAO);
     
@@ -558,16 +561,87 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", horizonPoleObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Front backboard
+    // Front of backboard
     glm::mat4 frontBoardObj = glm::mat4();
-    frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.0f, z + 0.5f));
-    frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.10f));
+    if(isSecond)
+    {
+        frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.0f, z - 0.5f));
+        frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+    }
+    else
+    {
+        frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.0f, z + 0.5f));
+        frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+    }
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, bballBoardFrontDiff);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
 
     shader.setMat4("model", frontBoardObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Back of backboard
+    glm::mat4 backBoardObj = glm::mat4();
+    if(isSecond)
+    {
+        backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.0f, z - 0.45f));
+        backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+    }
+    else
+    {
+        backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.0f, z + 0.45f));
+        backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballBoardBackDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    shader.setMat4("model", backBoardObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Top edge of backboard
+    glm::mat4 topEdgeBoardObj = glm::mat4();
+    if(isSecond)
+    {
+        topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.5f, z - 0.475f));
+        topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+    }
+    else
+    {
+        topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.5f, z + 0.475f));
+        topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    shader.setMat4("model", topEdgeBoardObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Bottom edge of backboard
+    glm::mat4 botEdgeBoardObj = glm::mat4();
+    if(isSecond)
+    {
+        botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.5f, z - 0.475f));
+        botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+    }
+    else
+    {
+        botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.5f, z + 0.475f));
+        botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    shader.setMat4("model", botEdgeBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
