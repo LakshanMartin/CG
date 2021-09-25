@@ -44,7 +44,6 @@ bool brightToggle = false;
 bool lightStay = false;
 bool orthographic = false;
 
-
 int main()
 {
     // glfw: initialize and configure
@@ -528,7 +527,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
 {
     glBindVertexArray(VAO);
     
-    // Base Pole
+    // Base Pole ----------------------------------------------------------------
     glm::mat4 basePoleObj = glm::mat4();
     basePoleObj = glm::translate(basePoleObj, glm::vec3(x, y, z));
     basePoleObj = glm::scale(basePoleObj, glm::vec3(0.1f, 1.5f, 0.1f));
@@ -541,7 +540,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", basePoleObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Horizontal Pole
+    // Horizontal Pole ----------------------------------------------------------
     glm::mat4 horizonPoleObj = glm::mat4();
 
     // Check which basketball ring to draw 
@@ -563,7 +562,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", horizonPoleObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Front of backboard
+    // Front of backboard -------------------------------------------------------
     glm::mat4 frontBoardObj = glm::mat4();
 
     // Check which basketball ring to draw
@@ -586,7 +585,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", frontBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Back of backboard
+    // Back of backboard --------------------------------------------------------
     glm::mat4 backBoardObj = glm::mat4();
 
     // Check which basketball ring to draw
@@ -609,7 +608,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", backBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Top edge of backboard
+    // Top edge of backboard ----------------------------------------------------
     glm::mat4 topEdgeBoardObj = glm::mat4();
 
     // Check which basketball ring to draw
@@ -632,7 +631,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", topEdgeBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Bottom edge of backboard
+    // Bottom edge of backboard -------------------------------------------------
     glm::mat4 botEdgeBoardObj = glm::mat4();
 
     // Check which basketball ring to draw
@@ -655,7 +654,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", botEdgeBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Left edge of backboard
+    // Left edge of backboard ---------------------------------------------------
     glm::mat4 leftEdgeBoardObj = glm::mat4();
 
     // Check which basketball ring to draw
@@ -678,7 +677,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     shader.setMat4("model", leftEdgeBoardObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // Right edge of backboard
+    // Right edge of backboard --------------------------------------------------
     glm::mat4 rightEdgeBoardObj = glm::mat4();
 
     // Check which basketball ring to draw
@@ -699,5 +698,120 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     glBindTexture(GL_TEXTURE_2D, mildSpec);
 
     shader.setMat4("model", rightEdgeBoardObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Ring base ----------------------------------------------------------------
+    glm::mat4 ringBaseObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        ringBaseObj = glm::translate(ringBaseObj, glm::vec3(x, y + 0.675f, z - 0.575f));
+        ringBaseObj = glm::scale(ringBaseObj, glm::vec3(0.05f, 0.05f, 0.1f));
+    }
+    else
+    {
+        ringBaseObj = glm::translate(ringBaseObj, glm::vec3(x, y + 0.675f, z + 0.575f));
+        ringBaseObj = glm::scale(ringBaseObj, glm::vec3(0.05f, 0.05f, 0.1f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", ringBaseObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Ring back ----------------------------------------------------------------
+    glm::mat4 ringBackObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.675f, z - 0.625f));
+        ringBackObj = glm::scale(ringBackObj, glm::vec3(0.25f, 0.05f, 0.025f));
+    }
+    else
+    {
+        ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.675f, z + 0.625f));
+        ringBackObj = glm::scale(ringBackObj, glm::vec3(0.25f, 0.05f, 0.025f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", ringBackObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Ring front ----------------------------------------------------------------
+    glm::mat4 ringFrontObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        ringFrontObj = glm::translate(ringFrontObj, glm::vec3(x, y + 0.675f, z - 0.85f));
+        ringFrontObj = glm::scale(ringFrontObj, glm::vec3(0.25f, 0.05f, 0.025f));
+    }
+    else
+    {
+        ringFrontObj = glm::translate(ringFrontObj, glm::vec3(x, y + 0.675f, z + 0.85f));
+        ringFrontObj = glm::scale(ringFrontObj, glm::vec3(0.25f, 0.05f, 0.025f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", ringFrontObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Ring left
+    glm::mat4 ringLeftObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.675f, z - 0.737f));
+        ringLeftObj = glm::scale(ringLeftObj, glm::vec3(0.025f, 0.05f, 0.25f));
+    }
+    else
+    {
+        ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.675f, z + 0.737f));
+        ringLeftObj = glm::scale(ringLeftObj, glm::vec3(0.025f, 0.05f, 0.25f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", ringLeftObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Ring right
+    glm::mat4 ringRightObj = glm::mat4();
+
+    // Check which basketball ring to draw
+    if(isSecond)
+    {
+        ringRightObj = glm::translate(ringRightObj, glm::vec3(x + 0.137f, y + 0.675f, z - 0.737f));
+        ringRightObj = glm::scale(ringRightObj, glm::vec3(0.025f, 0.05f, 0.25f));
+    }
+    else
+    {
+        ringRightObj = glm::translate(ringRightObj, glm::vec3(x + 0.137f, y + 0.675f, z + 0.737f));
+        ringRightObj = glm::scale(ringRightObj, glm::vec3(0.025f, 0.05f, 0.25f));
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, highSpec);
+
+    shader.setMat4("model", ringRightObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
