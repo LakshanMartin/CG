@@ -473,6 +473,26 @@ void bballCourtDraw(unsigned int VAO, Shader shader, unsigned int courtDiff, uns
 
 void treeDraw(unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigned int mildSpec, unsigned int treeTrunkDiff, unsigned int noSpec)
 {
+    // Base Coords to build from
+    float x = 3.0f;
+    float y = 1.0f;
+    float z = 0.0f;
+
+    // Tree trunk
+    glBindVertexArray(VAO);
+
+    glm::mat4 trunkObj = glm::mat4();;
+    trunkObj = glm::translate(trunkObj, glm::vec3(x, y, z));
+    trunkObj = glm::scale(trunkObj, glm::vec3(0.20f, 2.0f, 0.20f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, treeTrunkDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", trunkObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+    
     // Tree top
     glm::vec3 treeTop_scales[] = {
         glm::vec3( 1.0f, 0.4f, 1.0f ),
@@ -480,9 +500,9 @@ void treeDraw(unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigne
         glm::vec3( 0.3f, 0.1f, 0.3f ),
     };
     glm::vec3 treeTop_positions[] = {
-        glm::vec3( 2.0f, 2.0f, 0.0f ),
-        glm::vec3( 2.4f, 2.4f, 0.0f ),
-        glm::vec3( 2.7f, 2.6f, 0.0f ),
+        glm::vec3( x - 1.0f, y + 1.0f, z ),
+        glm::vec3( x - 0.6f, y + 1.4f, z ),
+        glm::vec3( x - 0.3f, y + 1.6f, z )
     };
 
     glActiveTexture(GL_TEXTURE0);
@@ -501,30 +521,20 @@ void treeDraw(unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigne
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
-    // Tree trunk
-    glBindVertexArray(VAO);
-
-    glm::mat4 trunkObj = glm::mat4();
-    trunkObj = glm::translate(trunkObj, glm::vec3(3.0f, 1.0f, 0.0f));
-    trunkObj = glm::scale(trunkObj, glm::vec3(0.20f, 2.0f, 0.20f));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, treeTrunkDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", trunkObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
 
 void bballRingDraw(unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballRingDiff, unsigned int highSpec)
 {
+    // Base Coords to build from
+    float x = 0.0f;
+    float y = 0.75f;
+    float z = -5.5f;
+
     // Base Pole
     glBindVertexArray(VAO);
 
     glm::mat4 basePoleObj = glm::mat4();
-    basePoleObj = glm::translate(basePoleObj, glm::vec3(0.0f, 0.75f, -5.5f));
+    basePoleObj = glm::translate(basePoleObj, glm::vec3(x, y, z));
     basePoleObj = glm::scale(basePoleObj, glm::vec3(0.1f, 1.5f, 0.1f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -539,7 +549,7 @@ void bballRingDraw(unsigned int VAO, Shader shader, unsigned int bballPoleDiff, 
     glBindVertexArray(VAO);
 
     glm::mat4 horizonPoleObj = glm::mat4();
-    horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(0.0f, 1.5f, -5.3f));
+    horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.75f, z + 0.2f));
     horizonPoleObj = glm::scale(horizonPoleObj, glm::vec3(0.1f, 0.1f, 0.5f));
 
     glActiveTexture(GL_TEXTURE0);
