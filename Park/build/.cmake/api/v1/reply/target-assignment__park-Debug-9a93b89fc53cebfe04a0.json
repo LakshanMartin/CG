@@ -203,8 +203,7 @@
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				5,
-				6
+				5
 			]
 		}
 	],
@@ -239,11 +238,6 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/assignment/park/park.h",
-			"sourceGroupIndex" : 2
-		},
-		{
-			"backtrace" : 1,
-			"path" : "src/assignment/park/transformations.h",
 			"sourceGroupIndex" : 2
 		}
 	],

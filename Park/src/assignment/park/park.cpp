@@ -1,15 +1,3 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <stb_image.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <learnopengl/filesystem.h>
-#include <learnopengl/shader_m.h>
-#include <learnopengl/camera.h>
-
 #include "park.h"
 
 #include <iostream>
@@ -546,11 +534,11 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw 
     if(isSecond)
     {
-        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.75f, z - 0.2f));
+        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.8f, z - 0.2f));
     }
     else
     {
-        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.75f, z + 0.2f));
+        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.8f, z + 0.2f));
     }
     horizonPoleObj = glm::scale(horizonPoleObj, glm::vec3(0.1f, 0.1f, 0.5f));
 
