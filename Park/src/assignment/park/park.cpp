@@ -821,7 +821,6 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     glm::mat4 leftShoeObj = glm::mat4();
 
     leftShoeObj = glm::translate(leftShoeObj, glm::vec3(x, y + 0.045f, z));
-    leftShoeObj = glm::rotate(leftShoeObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
     leftShoeObj = glm::scale(leftShoeObj, glm::vec3(0.15f, 0.10f, 0.25f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -835,8 +834,7 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Right shoe
     glm::mat4 rightShoeObj = glm::mat4();
 
-    rightShoeObj = glm::translate(rightShoeObj, glm::vec3(x + 0.15f, y + 0.045f, z + 0.15f));
-    rightShoeObj = glm::rotate(rightShoeObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    rightShoeObj = glm::translate(rightShoeObj, glm::vec3(x + 0.25f, y + 0.045f, z));
     rightShoeObj = glm::scale(rightShoeObj, glm::vec3(0.15f, 0.10f, 0.25f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -847,12 +845,11 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     shader.setMat4("model", rightShoeObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // LEGS ---------------------------------------------------------------------
+    // // LEGS ---------------------------------------------------------------------
     // Left leg
     glm::mat4 leftLegObj = glm::mat4();
 
-    leftLegObj = glm::translate(leftLegObj, glm::vec3(x - 0.035f, y + 0.345f, z + 0.035f));
-    leftLegObj = glm::rotate(leftLegObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    leftLegObj = glm::translate(leftLegObj, glm::vec3(x, y + 0.345f, z + 0.05f));
     leftLegObj = glm::scale(leftLegObj, glm::vec3(0.15f, 0.5f, 0.15f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -866,8 +863,7 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Right leg
     glm::mat4 rightLegObj = glm::mat4();
 
-    rightLegObj = glm::translate(rightLegObj, glm::vec3(x + 0.115f, y + 0.345f, z + 0.185f));
-    rightLegObj = glm::rotate(rightLegObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    rightLegObj = glm::translate(rightLegObj, glm::vec3(x + 0.25f, y + 0.345f, z + 0.05f));
     rightLegObj = glm::scale(rightLegObj, glm::vec3(0.15f, 0.5f, 0.15f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -878,11 +874,10 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     shader.setMat4("model", rightLegObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // TORSO --------------------------------------------------------------------
+    // // TORSO --------------------------------------------------------------------
     glm::mat4 torsoObj = glm::mat4();
 
-    torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.045f, y + 0.845f, z + 0.115f));
-    torsoObj = glm::rotate(torsoObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.125f, y + 0.845f, z + 0.05f));
     torsoObj = glm::scale(torsoObj, glm::vec3(0.4f, 0.5f, 0.15f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -895,5 +890,5 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 
     // ARMS
     // Left arm
-    
+
 }
