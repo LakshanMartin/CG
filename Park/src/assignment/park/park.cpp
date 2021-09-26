@@ -92,6 +92,7 @@ int main()
     unsigned int bballBoardBackDiff = loadTexture(FileSystem::getPath("resources/textures/bball_board_back.png").c_str());
     unsigned int bballBoardEdgeDiff = loadTexture(FileSystem::getPath("resources/textures/bball_board_edge.png").c_str());
     unsigned int bballRingDiff = loadTexture(FileSystem::getPath("resources/textures/bball_ring.png").c_str());
+    unsigned int bballDiff = loadTexture(FileSystem::getPath("resources/textures/bball.png").c_str());
     unsigned int manShoeDiff = loadTexture(FileSystem::getPath("resources/textures/man_shoe.png").c_str());
     unsigned int manLegsDiff = loadTexture(FileSystem::getPath("resources/textures/man_leg.png").c_str());
     unsigned int manTopBackDiff = loadTexture(FileSystem::getPath("resources/textures/man_top_back.png").c_str());
@@ -228,9 +229,11 @@ int main()
         grassDraw(VAO, shader, grassDiff, mildSpec);
         bballCourtDraw(VAO, shader, bballCourtDiff, noSpec);
         treeDraw(3.0f, 1.0f, 0.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-        bballRingDraw(false, 0.0f, 0.75f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        bballRingDraw(true, 0.0f, 0.75f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        manDraw(0.0f, 0.0f, 0.0f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
+        bballRingDraw(false, 0.0f, 1.0f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
+        bballRingDraw(true, 0.0f, 1.0f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
+        manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
+        bballDraw(0.0f, 0.75f, -1.75f, VAO, shader, bballDiff, mildSpec);
+        
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -914,8 +917,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Left arm sleave
     glm::mat4 leftArmObj = glm::mat4();
 
-    leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.75f, z + 0.05f));
-    leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.25f, 0.1f));
+    leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
+    leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manTopDiff);
@@ -928,8 +931,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Left hand
     glm::mat4 leftHandObj = glm::mat4();
 
-    leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.13f, y + 0.58f, z + 0.05f));
-    leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.1f));
+    leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.13f, y + 0.675f, z - 0.025f));
+    leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.25f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manNeckDiff);
@@ -942,8 +945,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Right arm sleave
     glm::mat4 rightArmObj = glm::mat4();
 
-    rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.75f, z + 0.05f));
-    rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.25f, 0.1f));
+    rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
+    rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manTopDiff);
@@ -956,8 +959,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Right hand
     glm::mat4 rightHandObj = glm::mat4();
 
-    rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.38f, y + 0.58f, z + 0.05f));
-    rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.1f));
+    rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.38f, y + 0.675f, z - 0.025f));
+    rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.25f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manNeckDiff);
@@ -1070,5 +1073,23 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     glBindTexture(GL_TEXTURE_2D, noSpec);
 
     shader.setMat4("model", rightHeadObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+}
+
+void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballDiff, unsigned int mildSpec)
+{
+    glBindVertexArray(VAO);
+
+    glm::mat4 bballObj = glm::mat4();
+
+    bballObj = glm::translate(bballObj, glm::vec3(x, y, z));
+    bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bballDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    shader.setMat4("model", bballObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
