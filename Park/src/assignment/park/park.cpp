@@ -230,7 +230,7 @@ int main()
         treeDraw(3.0f, 1.0f, 0.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         bballRingDraw(false, 0.0f, 0.75f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         bballRingDraw(true, 0.0f, 0.75f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        manDraw(6.0f, 0.0f, 5.0f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
+        manDraw(0.0f, 0.0f, 0.0f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -531,7 +531,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Base Pole ----------------------------------------------------------------
     glm::mat4 basePoleObj = glm::mat4();
     basePoleObj = glm::translate(basePoleObj, glm::vec3(x, y, z));
-    basePoleObj = glm::scale(basePoleObj, glm::vec3(0.1f, 1.5f, 0.1f));
+    basePoleObj = glm::scale(basePoleObj, glm::vec3(0.1f, 2.0f, 0.1f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, bballPoleDiff);
@@ -547,11 +547,11 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw 
     if(isSecond)
     {
-        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.8f, z - 0.2f));
+        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 1.05f, z - 0.2f));
     }
     else
     {
-        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 0.8f, z + 0.2f));
+        horizonPoleObj = glm::translate(horizonPoleObj, glm::vec3(x, y + 1.05f, z + 0.2f));
     }
     horizonPoleObj = glm::scale(horizonPoleObj, glm::vec3(0.1f, 0.1f, 0.5f));
 
@@ -569,12 +569,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.0f, z - 0.5f));
+        frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.2f, z - 0.5f));
         frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
     }
     else
     {
-        frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.0f, z + 0.5f));
+        frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.2f, z + 0.5f));
         frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
     }
 
@@ -592,12 +592,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.0f, z - 0.45f));
+        backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.2f, z - 0.45f));
         backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
     }
     else
     {
-        backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.0f, z + 0.45f));
+        backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.2f, z + 0.45f));
         backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
     }
 
@@ -615,12 +615,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.5f, z - 0.475f));
+        topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.7f, z - 0.475f));
         topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
     }
     else
     {
-        topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.5f, z + 0.475f));
+        topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.7f, z + 0.475f));
         topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
     }
 
@@ -638,12 +638,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.5f, z - 0.475f));
+        botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.7f, z - 0.475f));
         botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
     }
     else
     {
-        botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.5f, z + 0.475f));
+        botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.7f, z + 0.475f));
         botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
     }
 
@@ -661,12 +661,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.0f, z - 0.475f));
+        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.2f, z - 0.475f));
         leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
     else
     {
-        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.0f, z + 0.475f));
+        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.2f, z + 0.475f));
         leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
 
@@ -684,12 +684,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.0f, z - 0.475f));
+        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.2f, z - 0.475f));
         rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
     else
     {
-        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.0f, z + 0.475f));
+        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.2f, z + 0.475f));
         rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
 
@@ -707,12 +707,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        ringBaseObj = glm::translate(ringBaseObj, glm::vec3(x, y + 0.675f, z - 0.575f));
+        ringBaseObj = glm::translate(ringBaseObj, glm::vec3(x, y + 0.85f, z - 0.575f));
         ringBaseObj = glm::scale(ringBaseObj, glm::vec3(0.05f, 0.05f, 0.1f));
     }
     else
     {
-        ringBaseObj = glm::translate(ringBaseObj, glm::vec3(x, y + 0.675f, z + 0.575f));
+        ringBaseObj = glm::translate(ringBaseObj, glm::vec3(x, y + 0.85f, z + 0.575f));
         ringBaseObj = glm::scale(ringBaseObj, glm::vec3(0.05f, 0.05f, 0.1f));
     }
 
@@ -730,12 +730,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.675f, z - 0.625f));
+        ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.85f, z - 0.625f));
         ringBackObj = glm::scale(ringBackObj, glm::vec3(0.25f, 0.05f, 0.025f));
     }
     else
     {
-        ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.675f, z + 0.625f));
+        ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.85f, z + 0.625f));
         ringBackObj = glm::scale(ringBackObj, glm::vec3(0.25f, 0.05f, 0.025f));
     }
 
@@ -753,12 +753,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        ringFrontObj = glm::translate(ringFrontObj, glm::vec3(x, y + 0.675f, z - 0.85f));
+        ringFrontObj = glm::translate(ringFrontObj, glm::vec3(x, y + 0.85f, z - 0.85f));
         ringFrontObj = glm::scale(ringFrontObj, glm::vec3(0.25f, 0.05f, 0.025f));
     }
     else
     {
-        ringFrontObj = glm::translate(ringFrontObj, glm::vec3(x, y + 0.675f, z + 0.85f));
+        ringFrontObj = glm::translate(ringFrontObj, glm::vec3(x, y + 0.85f, z + 0.85f));
         ringFrontObj = glm::scale(ringFrontObj, glm::vec3(0.25f, 0.05f, 0.025f));
     }
 
@@ -776,12 +776,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.675f, z - 0.737f));
+        ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.85f, z - 0.737f));
         ringLeftObj = glm::scale(ringLeftObj, glm::vec3(0.025f, 0.05f, 0.25f));
     }
     else
     {
-        ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.675f, z + 0.737f));
+        ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.85f, z + 0.737f));
         ringLeftObj = glm::scale(ringLeftObj, glm::vec3(0.025f, 0.05f, 0.25f));
     }
 
@@ -799,12 +799,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        ringRightObj = glm::translate(ringRightObj, glm::vec3(x + 0.137f, y + 0.675f, z - 0.737f));
+        ringRightObj = glm::translate(ringRightObj, glm::vec3(x + 0.137f, y + 0.85f, z - 0.737f));
         ringRightObj = glm::scale(ringRightObj, glm::vec3(0.025f, 0.05f, 0.25f));
     }
     else
     {
-        ringRightObj = glm::translate(ringRightObj, glm::vec3(x + 0.137f, y + 0.675f, z + 0.737f));
+        ringRightObj = glm::translate(ringRightObj, glm::vec3(x + 0.137f, y + 0.85f, z + 0.737f));
         ringRightObj = glm::scale(ringRightObj, glm::vec3(0.025f, 0.05f, 0.25f));
     }
 
