@@ -3,8 +3,8 @@
 #include <iostream>
 
 // SETTING
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1000;
+const unsigned int SCR_HEIGHT = 800;
 
 // CAMERA
 Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
@@ -92,6 +92,13 @@ int main()
     unsigned int bballBoardBackDiff = loadTexture(FileSystem::getPath("resources/textures/bball_board_back.png").c_str());
     unsigned int bballBoardEdgeDiff = loadTexture(FileSystem::getPath("resources/textures/bball_board_edge.png").c_str());
     unsigned int bballRingDiff = loadTexture(FileSystem::getPath("resources/textures/bball_ring.png").c_str());
+    unsigned int manShoeDiff = loadTexture(FileSystem::getPath("resources/textures/man_shoe.png").c_str());
+    unsigned int manLegsDiff = loadTexture(FileSystem::getPath("resources/textures/man_leg.png").c_str());
+    unsigned int manTopBackDiff = loadTexture(FileSystem::getPath("resources/textures/man_top_back.png").c_str());
+    unsigned int manTopDiff = loadTexture(FileSystem::getPath("resources/textures/man_top.png").c_str());
+    unsigned int manArmDiff = loadTexture(FileSystem::getPath("resources/textures/man_arm.png").c_str());
+    unsigned int manNeckDiff = loadTexture(FileSystem::getPath("resources/textures/man_neck.png").c_str());
+    unsigned int manFaceDiff = loadTexture(FileSystem::getPath("resources/textures/man_face.png").c_str());
 
 
     // first, configure the cube's VAO (and VBO)
@@ -218,6 +225,7 @@ int main()
         treeDraw(3.0f, 1.0f, 0.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         bballRingDraw(false, 0.0f, 0.75f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         bballRingDraw(true, 0.0f, 0.75f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
+        manDraw(6.0f, 0.0f, 5.0f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, noSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -801,5 +809,72 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     glBindTexture(GL_TEXTURE_2D, highSpec);
 
     shader.setMat4("model", ringRightObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+}
+
+void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int noSpec)
+{
+    glBindVertexArray(VAO);
+
+    // SHOES --------------------------------------------------------------------
+    // Left shoe
+    glm::mat4 leftShoeObj = glm::mat4();
+
+    leftShoeObj = glm::translate(leftShoeObj, glm::vec3(x, y + 0.045f, z));
+    leftShoeObj = glm::rotate(leftShoeObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    leftShoeObj = glm::scale(leftShoeObj, glm::vec3(0.15f, 0.10f, 0.25f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manShoeDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", leftShoeObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Right shoe
+    glm::mat4 rightShoeObj = glm::mat4();
+
+    rightShoeObj = glm::translate(rightShoeObj, glm::vec3(x + 0.15f, y + 0.045f, z + 0.15f));
+    rightShoeObj = glm::rotate(rightShoeObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    rightShoeObj = glm::scale(rightShoeObj, glm::vec3(0.15f, 0.10f, 0.25f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manShoeDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", rightShoeObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // LEGS ---------------------------------------------------------------------
+    // Left leg
+    glm::mat4 leftLegObj = glm::mat4();
+
+    leftLegObj = glm::translate(leftLegObj, glm::vec3(x - 0.035f, y + 0.345f, z + 0.035f));
+    leftLegObj = glm::rotate(leftLegObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    leftLegObj = glm::scale(leftLegObj, glm::vec3(0.15f, 0.5f, 0.15f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manLegsDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", leftLegObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Right leg
+    glm::mat4 rightLegObj = glm::mat4();
+
+    rightLegObj = glm::translate(rightLegObj, glm::vec3(x + 0.115f, y + 0.345f, z + 0.185f));
+    rightLegObj = glm::rotate(rightLegObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    rightLegObj = glm::scale(rightLegObj, glm::vec3(0.15f, 0.5f, 0.15f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manLegsDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", rightLegObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
