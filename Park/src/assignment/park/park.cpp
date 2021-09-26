@@ -877,4 +877,23 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 
     shader.setMat4("model", rightLegObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // TORSO --------------------------------------------------------------------
+    glm::mat4 torsoObj = glm::mat4();
+
+    torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.045f, y + 0.845f, z + 0.115f));
+    torsoObj = glm::rotate(torsoObj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    torsoObj = glm::scale(torsoObj, glm::vec3(0.4f, 0.5f, 0.15f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manTopDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", torsoObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // ARMS
+    // Left arm
+    
 }
