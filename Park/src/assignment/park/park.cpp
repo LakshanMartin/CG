@@ -879,7 +879,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     shader.setMat4("model", rightLegObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // // TORSO --------------------------------------------------------------------
+    // TORSO --------------------------------------------------------------------
+    // Base torso
     glm::mat4 torsoObj = glm::mat4();
 
     torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.125f, y + 0.67f, z + 0.05f));
@@ -893,7 +894,23 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     shader.setMat4("model", torsoObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // ARMS
+    // Back torso
+    glm::mat4 backTorsoObj = glm::mat4();
+
+    backTorsoObj = glm::translate(backTorsoObj, glm::vec3(x+ 0.125f, y + 0.67f, z + 0.125f));
+    backTorsoObj = glm::rotate(backTorsoObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
+    backTorsoObj = glm::rotate(backTorsoObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+    backTorsoObj = glm::scale(backTorsoObj, glm::vec3(0.4f, 0.45f, 0.01f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manTopBackDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", backTorsoObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // ARMS ---------------------------------------------------------------------
     // Left arm sleave
     glm::mat4 leftArmObj = glm::mat4();
 
@@ -950,7 +967,7 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     shader.setMat4("model", rightHandObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // NECK
+    // NECK ---------------------------------------------------------------------
     glm::mat4 neckObj = glm::mat4();
 
     neckObj = glm::translate(neckObj, glm::vec3(x + 0.125f, y + 0.92f, z + 0.05f));
@@ -964,7 +981,7 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     shader.setMat4("model", neckObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-    // HEAD
+    // HEAD ---------------------------------------------------------------------
     // Face
     glm::mat4 headObj = glm::mat4();
 
