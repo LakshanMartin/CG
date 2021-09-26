@@ -849,8 +849,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Left leg
     glm::mat4 leftLegObj = glm::mat4();
 
-    leftLegObj = glm::translate(leftLegObj, glm::vec3(x, y + 0.345f, z + 0.05f));
-    leftLegObj = glm::scale(leftLegObj, glm::vec3(0.15f, 0.5f, 0.15f));
+    leftLegObj = glm::translate(leftLegObj, glm::vec3(x, y + 0.27f, z + 0.05f));
+    leftLegObj = glm::scale(leftLegObj, glm::vec3(0.15f, 0.35f, 0.15f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manLegsDiff);
@@ -863,8 +863,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Right leg
     glm::mat4 rightLegObj = glm::mat4();
 
-    rightLegObj = glm::translate(rightLegObj, glm::vec3(x + 0.25f, y + 0.345f, z + 0.05f));
-    rightLegObj = glm::scale(rightLegObj, glm::vec3(0.15f, 0.5f, 0.15f));
+    rightLegObj = glm::translate(rightLegObj, glm::vec3(x + 0.25f, y + 0.27f, z + 0.05f));
+    rightLegObj = glm::scale(rightLegObj, glm::vec3(0.15f, 0.35f, 0.15f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manLegsDiff);
@@ -877,8 +877,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // // TORSO --------------------------------------------------------------------
     glm::mat4 torsoObj = glm::mat4();
 
-    torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.125f, y + 0.845f, z + 0.05f));
-    torsoObj = glm::scale(torsoObj, glm::vec3(0.4f, 0.5f, 0.15f));
+    torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.125f, y + 0.67f, z + 0.05f));
+    torsoObj = glm::scale(torsoObj, glm::vec3(0.4f, 0.45f, 0.15f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manTopDiff);
@@ -889,6 +889,59 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // ARMS
-    // Left arm
+    // Left arm sleave
+    glm::mat4 leftArmObj = glm::mat4();
 
+    leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.75f, z + 0.05f));
+    leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.25f, 0.1f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manTopDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", leftArmObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Left hand
+    glm::mat4 leftHandObj = glm::mat4();
+
+    leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.13f, y + 0.58f, z + 0.05f));
+    leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.1f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manNeckDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", leftHandObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Right arm sleave
+    glm::mat4 rightArmObj = glm::mat4();
+
+    rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.75f, z + 0.05f));
+    rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.25f, 0.1f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manTopDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", rightArmObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+    // Right hand
+    glm::mat4 rightHandObj = glm::mat4();
+
+    rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.38f, y + 0.58f, z + 0.05f));
+    rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.1f));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, manNeckDiff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, noSpec);
+
+    shader.setMat4("model", rightHandObj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
