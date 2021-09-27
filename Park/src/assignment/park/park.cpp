@@ -104,6 +104,7 @@ int main()
     unsigned int manArmDiff = loadTexture(FileSystem::getPath("resources/textures/man_arm.png").c_str());
     unsigned int manNeckDiff = loadTexture(FileSystem::getPath("resources/textures/man_neck.png").c_str());
     unsigned int manFaceDiff = loadTexture(FileSystem::getPath("resources/textures/man_face.png").c_str());
+    unsigned int manFace2Diff = loadTexture(FileSystem::getPath("resources/textures/man_face2.png").c_str());
     unsigned int manHeadTopDiff = loadTexture(FileSystem::getPath("resources/textures/man_head_top.png").c_str());
     unsigned int manHeadBackDiff = loadTexture(FileSystem::getPath("resources/textures/man_head_back.png").c_str());
     unsigned int manHeadLeftDiff = loadTexture(FileSystem::getPath("resources/textures/man_head_left.png").c_str());
@@ -235,7 +236,7 @@ int main()
         treeDraw(3.0f, 1.0f, 0.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         bballRingDraw(false, 0.0f, 1.0f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         bballRingDraw(true, 0.0f, 1.0f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
+        manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
         bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -741,7 +742,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     applyTexture(shader, ringRightObj, bballRingDiff, highSpec);
 }
 
-void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
+void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manFace2Diff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
 {
     glBindVertexArray(VAO);
 
@@ -817,99 +818,101 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
         rightHandObj = glm::rotate(rightHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
         rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
+
+        // Head box
+        headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
+        headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
+        applyTexture(shader, headObj, manFaceDiff, noSpec);
+
+        // Chin
+        chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
+        chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
+
+        // Hair
+        hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
+        hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
+
+        // Back of head
+        backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.18f));
+        backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+        backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
+
+        // Left of head
+        leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x, y + 1.07f, z + 0.05f));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
+
+        // Right of head
+        rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.25f, y + 1.07f, z + 0.05f));
+        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
     }
     else
     {
-        leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
-        leftArmObj = glm::rotate(leftArmObj, glm::radians(-10.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.02f));
+        leftArmObj = glm::rotate(leftArmObj, glm::radians(-15.0f), glm::vec3(0.0, 1.0, 0.0));
         leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
         leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
-        leftHandObj = glm::translate(leftHandObj, glm::vec3(x, y + 0.675f, z - 0.09f));
+        leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.05f, y + 0.675f, z - 0.09f));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(-40.0f), glm::vec3(0.0, 1.0, 0.0));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(-10.0f), glm::vec3(1.0, 0.0, 0.0));
         leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
-        rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
-        rightArmObj = glm::rotate(rightArmObj, glm::radians(10.0f), glm::vec3(0.0, 1.0, 0.0));
+        rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.02f));
+        rightArmObj = glm::rotate(rightArmObj, glm::radians(-15.0f), glm::vec3(0.0, 1.0, 0.0));
         rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
         rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
-        rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.40f, y + 0.675f, z - 0.09f));
+        rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.45f, y + 0.675f, z - 0.09f));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(-10.0f), glm::vec3(1.0, 0.0, 0.0));
         rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
+
+        // Head box
+        headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
+        headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::rotate(headObj, glm::radians(-30.0f), glm::vec3(0.0, 0.0, 1.0));
+        headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
+        applyTexture(shader, headObj, manFace2Diff, noSpec);
+
+        // Chin
+        chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
+        chinObj = glm::rotate(chinObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
+        chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
+
+        // Hair
+        hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
+        hairObj = glm::rotate(hairObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
+        hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
+
+        // Back of head
+        backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.06f, y + 1.07f, z + 0.16f));
+        backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+        backHeadObj = glm::rotate(backHeadObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
+        backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
+
+        // Left of head
+        leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x + 0.01, y + 1.07f, z - 0.01f));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(-30.0f), glm::vec3(0.0, 0.0, 1.0));
+        leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
+
+        // Right of head
+        rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.23f, y + 1.07f, z + 0.115f));
+        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-30.0f), glm::vec3(0.0, 0.0, 1.0));
+        rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
     }
 
     // NECK ---------------------------------------------------------------------
     neckObj = glm::translate(neckObj, glm::vec3(x + 0.125f, y + 0.92f, z + 0.05f));
     neckObj = glm::scale(neckObj, glm::vec3(0.1f, 0.05f, 0.1f));
-
-    // HEAD ---------------------------------------------------------------------
-    if(playAnimation)
-    {
-        // Head box
-        headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
-        headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-        headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
-        headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
-
-        // Chin
-        chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
-        chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
-
-        // Hair
-        hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
-        hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
-
-        // Back of head
-        backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.18f));
-        backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
-        backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
-
-        // Left of head
-        leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x, y + 1.07f, z + 0.05f));
-        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
-        leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
-
-        // Right of head
-        rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.25f, y + 1.07f, z + 0.05f));
-        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
-        rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
-    }
-    else
-    {
-        // Head box
-        headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
-        headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-        headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
-        headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
-
-        // Chin
-        chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
-        chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
-
-        // Hair
-        hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
-        hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
-
-        // Back of head
-        backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.18f));
-        backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
-        backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
-
-        // Left of head
-        leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x, y + 1.07f, z + 0.05f));
-        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
-        leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
-
-        // Right of head
-        rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.25f, y + 1.07f, z + 0.05f));
-        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
-        rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
-    }
 
     applyTexture(shader, leftShoeObj, manShoeDiff, noSpec);
     applyTexture(shader, rightShoeObj, manShoeDiff, noSpec);
@@ -921,7 +924,7 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     applyTexture(shader, leftHandObj, manNeckDiff, noSpec);
     applyTexture(shader, rightArmObj, manTopDiff, noSpec);
     applyTexture(shader, rightHandObj, manNeckDiff, noSpec);
-    applyTexture(shader, headObj, manFaceDiff, noSpec);
+    
     applyTexture(shader, neckObj, manNeckDiff, noSpec);
     applyTexture(shader, chinObj, manNeckDiff, noSpec);
     applyTexture(shader, hairObj, manHeadTopDiff, noSpec);
