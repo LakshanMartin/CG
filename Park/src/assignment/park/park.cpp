@@ -34,6 +34,7 @@ bool orthographic = false;
 // ANIMATION TRIGGER
 bool playAnimation = true;
 float ballDistance = 1.0;
+float dogDistance = 1.0;
 
 
 int main()
@@ -97,8 +98,8 @@ int main()
     unsigned int bballBoardEdgeDiff = loadTexture(FileSystem::getPath("resources/textures/bball_board_edge.png").c_str());
     unsigned int bballRingDiff = loadTexture(FileSystem::getPath("resources/textures/bball_ring.png").c_str());
     unsigned int bballDiff = loadTexture(FileSystem::getPath("resources/textures/bball.png").c_str());
-    unsigned int manShoeDiff = loadTexture(FileSystem::getPath("resources/textures/man_shoe.png").c_str());
-    unsigned int manLegsDiff = loadTexture(FileSystem::getPath("resources/textures/man_leg.png").c_str());
+    unsigned int manShoeDiff = loadTexture(FileSystem::getPath("resources/textures/shoes.png").c_str());
+    unsigned int manLegsDiff = loadTexture(FileSystem::getPath("resources/textures/pants.png").c_str());
     unsigned int manTopBackDiff = loadTexture(FileSystem::getPath("resources/textures/man_top_back.png").c_str());
     unsigned int manTopDiff = loadTexture(FileSystem::getPath("resources/textures/man_top.png").c_str());
     unsigned int manArmDiff = loadTexture(FileSystem::getPath("resources/textures/man_arm.png").c_str());
@@ -109,6 +110,7 @@ int main()
     unsigned int manHeadBackDiff = loadTexture(FileSystem::getPath("resources/textures/man_head_back.png").c_str());
     unsigned int manHeadLeftDiff = loadTexture(FileSystem::getPath("resources/textures/man_head_left.png").c_str());
     unsigned int manHeadRightDiff = loadTexture(FileSystem::getPath("resources/textures/man_head_right.png").c_str());
+    unsigned int dogDiff = loadTexture(FileSystem::getPath("resources/textures/dog_fur.png").c_str());
     
 
 
@@ -238,6 +240,7 @@ int main()
         bballRingDraw(true, 0.0f, 1.0f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
         bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
+        dogDraw(3.0f, 0.2f, -4.0f, VAO, shader, dogDiff, noSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -444,6 +447,17 @@ unsigned int loadTexture(char const * path)
     }
 
     return textureID;
+}
+
+void applyTexture(Shader shader, glm::mat4 obj, unsigned int diff, unsigned int spec)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, spec);
+
+    shader.setMat4("model", obj);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
 
 void update_delay()
@@ -793,27 +807,31 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     backTorsoObj = glm::rotate(backTorsoObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
     backTorsoObj = glm::scale(backTorsoObj, glm::vec3(0.4f, 0.45f, 0.01f));
 
-    // ARMS ---------------------------------------------------------------------
+    // ANIMATED PARTS -----------------------------------------------------------
     // For arm animations
     float scaleAmount = sin(glfwGetTime() * 8.0f);
 
     if(playAnimation)
     {
+        // Left arm
         leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
         leftArmObj = glm::rotate(leftArmObj, glm::radians(-10.0f), glm::vec3(0.0, 1.0, 0.0));
         leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
         leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
+        // Left hand
         leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.07f, y + 0.675f, z - 0.09f));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
+        // Right arm
         rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
         rightArmObj = glm::rotate(rightArmObj, glm::radians(10.0f), glm::vec3(0.0, 1.0, 0.0));
         rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
         rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
+        // Right hand
         rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.32f, y + 0.675f, z - 0.09f));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -824,6 +842,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
         headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
         headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
         headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
+        
+        // Happy face applied
         applyTexture(shader, headObj, manFaceDiff, noSpec);
 
         // Chin
@@ -852,21 +872,25 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     }
     else
     {
+        // Left arm
         leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.02f));
         leftArmObj = glm::rotate(leftArmObj, glm::radians(-15.0f), glm::vec3(0.0, 1.0, 0.0));
         leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
         leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
+        // Left hand
         leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.05f, y + 0.675f, z - 0.09f));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(-40.0f), glm::vec3(0.0, 1.0, 0.0));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(-10.0f), glm::vec3(1.0, 0.0, 0.0));
         leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
+        // Right arm
         rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.02f));
         rightArmObj = glm::rotate(rightArmObj, glm::radians(-15.0f), glm::vec3(0.0, 1.0, 0.0));
         rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
         rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
+        // Right hand
         rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.45f, y + 0.675f, z - 0.09f));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(-10.0f), glm::vec3(1.0, 0.0, 0.0));
@@ -878,6 +902,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
         headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
         headObj = glm::rotate(headObj, glm::radians(-30.0f), glm::vec3(0.0, 0.0, 1.0));
         headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
+        
+        // Sad face applied
         applyTexture(shader, headObj, manFace2Diff, noSpec);
 
         // Chin
@@ -924,7 +950,6 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     applyTexture(shader, leftHandObj, manNeckDiff, noSpec);
     applyTexture(shader, rightArmObj, manTopDiff, noSpec);
     applyTexture(shader, rightHandObj, manNeckDiff, noSpec);
-    
     applyTexture(shader, neckObj, manNeckDiff, noSpec);
     applyTexture(shader, chinObj, manNeckDiff, noSpec);
     applyTexture(shader, hairObj, manHeadTopDiff, noSpec);
@@ -958,6 +983,7 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
         }
 
         scaleAmount = ballDistance * 0.25f;
+
         bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, z - 0.15f));
         bballObj = glm::rotate(bballObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
@@ -969,13 +995,55 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
     applyTexture(shader, bballObj, bballDiff, mildSpec);
 }
 
-void applyTexture(Shader shader, glm::mat4 obj, unsigned int diff, unsigned int spec)
+void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int dogDiff, unsigned int noSpec)
 {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, spec);
+    float headScaleAmount;
+    float bodyScaleAmount;
+    glBindVertexArray(VAO);
 
-    shader.setMat4("model", obj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+    glm::mat4 dogHeadObj = glm::mat4();
+    glm::mat4 dogBodyObj = glm::mat4();
+
+    if(playAnimation)
+    {
+        dogDistance = 1.0;
+
+        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, z));
+        dogHeadObj = glm::scale(dogHeadObj, glm::vec3(0.15f, 0.15f, 0.25f));
+        dogHeadObj = glm::rotate(dogHeadObj, glm::radians(-25.0f), glm::vec3(1.0, 0.0, 0.0));
+
+        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x, y, z + 0.25f));
+        dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
+    }
+    else
+    {
+        dogDistance++;
+
+        if(dogDistance == 75.0)
+        {
+            dogDistance--;
+
+            headScaleAmount = sin(glfwGetTime() * 4.0f);
+            bodyScaleAmount = sin(glfwGetTime() * 4.0f);
+
+            dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 3.5f, headScaleAmount * 0.1f, z + 3.5f));
+            dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 3.5f, bodyScaleAmount * 0.1f, z + 3.5f));
+        }
+
+        headScaleAmount = dogDistance * 0.35f;
+        bodyScaleAmount = dogDistance * 0.25f;
+
+        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y + 0.05f, z));
+        dogHeadObj = glm::scale(dogHeadObj, glm::vec3(0.15f, 0.15f, 0.25f));
+        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, -headScaleAmount));
+        dogHeadObj = glm::rotate(dogHeadObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
+
+        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x, y, z + 0.25f));
+        dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
+        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleAmount));
+    }
+
+    applyTexture(shader, dogHeadObj, dogDiff, noSpec);
+    applyTexture(shader, dogBodyObj, dogDiff, noSpec);
 }
+
