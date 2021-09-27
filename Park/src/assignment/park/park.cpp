@@ -1,7 +1,5 @@
 #include "park.h"
 
-#include <iostream>
-
 // SETTING
 const unsigned int SCR_WIDTH = 1000;
 const unsigned int SCR_HEIGHT = 800;
@@ -31,6 +29,12 @@ int attenIndex = 1;
 bool brightToggle = false;
 bool lightStay = false;
 bool orthographic = false;
+
+// ANIMATIONS
+float ballAni [] = {0.75, 0.65, 0.55, 0.45, 0.35, 0.25, 0.15, 0.05};
+int aniStep = 7;
+bool ballDown = true;
+
 
 int main()
 {
@@ -232,13 +236,15 @@ int main()
         bballRingDraw(false, 0.0f, 1.0f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         bballRingDraw(true, 0.0f, 1.0f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
-        bballDraw(0.0f, 0.75f, -1.75f, VAO, shader, bballDiff, mildSpec);
-        
+        bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
+
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -914,10 +920,16 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // ARMS ---------------------------------------------------------------------
+    // For arm animations
+    unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+    float scaleAmount = sin(glfwGetTime() * 8.0f);
+
     // Left arm sleave
     glm::mat4 leftArmObj = glm::mat4();
 
     leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
+    leftArmObj = glm::rotate(leftArmObj, glm::radians(-10.0f), glm::vec3(0.0, 1.0, 0.0));
+    leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
     leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -931,8 +943,10 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Left hand
     glm::mat4 leftHandObj = glm::mat4();
 
-    leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.13f, y + 0.675f, z - 0.025f));
-    leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.25f));
+    leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.07f, y + 0.675f, z - 0.09f));
+    leftHandObj = glm::rotate(leftHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
+    leftHandObj = glm::rotate(leftHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
+    leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manNeckDiff);
@@ -946,6 +960,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     glm::mat4 rightArmObj = glm::mat4();
 
     rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
+    rightArmObj = glm::rotate(rightArmObj, glm::radians(10.0f), glm::vec3(0.0, 1.0, 0.0));
+    rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
     rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -959,8 +975,12 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // Right hand
     glm::mat4 rightHandObj = glm::mat4();
 
-    rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.38f, y + 0.675f, z - 0.025f));
-    rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.25f));
+    rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.32f, y + 0.675f, z - 0.09f));
+    rightHandObj = glm::rotate(rightHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
+    rightHandObj = glm::rotate(rightHandObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
+    rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
+
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(rightHandObj));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, manNeckDiff);
@@ -1080,15 +1100,24 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
 {
     glBindVertexArray(VAO);
 
+    // For ball animation
+    unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+    float scaleAmount = sin(glfwGetTime() * 8.0f);
+
     glm::mat4 bballObj = glm::mat4();
 
     bballObj = glm::translate(bballObj, glm::vec3(x, y, z));
     bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
+    bballObj = glm::translate(bballObj, glm::vec3(x, scaleAmount * 1.5f, z));
+    
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(bballObj));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, bballDiff);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, mildSpec);
+
+    glTranslatef(1.0, 2.0, 0.0);
 
     shader.setMat4("model", bballObj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
