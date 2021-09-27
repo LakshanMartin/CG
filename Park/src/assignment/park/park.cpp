@@ -32,7 +32,7 @@ bool lightStay = false;
 bool orthographic = false;
 
 // ANIMATION TRIGGER
-bool playAnimation = false;
+bool playAnimation = true;
 float ballDistance = 1.0;
 
 
@@ -359,13 +359,13 @@ void processInput(GLFWwindow *window)
     {
         animationTimer = 20;
 
-        if(!playAnimation)
+        if(playAnimation)
         {
-            playAnimation = true;
+            playAnimation = false;
         }
         else
         {
-            playAnimation = false;
+            playAnimation = true;
         }
     }
 }
@@ -490,17 +490,10 @@ void bballCourtDraw(unsigned int VAO, Shader shader, unsigned int courtDiff, uns
 {
     glBindVertexArray(VAO);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, courtDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
     glm::mat4 courtObj = glm::mat4();
     courtObj = glm::scale(courtObj, glm::vec3(5.0f, 0.0f, 10.0f));
 
-    shader.setMat4("model", courtObj);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    applyTexture(shader, courtObj, courtDiff, noSpec);
 }
 
 void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigned int mildSpec, unsigned int treeTrunkDiff, unsigned int noSpec)
@@ -512,13 +505,7 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     trunkObj = glm::translate(trunkObj, glm::vec3(x, y, z));
     trunkObj = glm::scale(trunkObj, glm::vec3(0.20f, 2.0f, 0.20f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, treeTrunkDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", trunkObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+    applyTexture(shader, trunkObj, treeTrunkDiff, noSpec);
     
     // Tree top
     glm::vec3 treeTop_scales[] = {
@@ -559,14 +546,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     basePoleObj = glm::translate(basePoleObj, glm::vec3(x, y, z));
     basePoleObj = glm::scale(basePoleObj, glm::vec3(0.1f, 2.0f, 0.1f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballPoleDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", basePoleObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Horizontal Pole ----------------------------------------------------------
     glm::mat4 horizonPoleObj = glm::mat4();
 
@@ -581,13 +560,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     }
     horizonPoleObj = glm::scale(horizonPoleObj, glm::vec3(0.1f, 0.1f, 0.5f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballPoleDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", horizonPoleObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // Front of backboard -------------------------------------------------------
     glm::mat4 frontBoardObj = glm::mat4();
@@ -604,14 +576,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballBoardFrontDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
-    shader.setMat4("model", frontBoardObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Back of backboard --------------------------------------------------------
     glm::mat4 backBoardObj = glm::mat4();
 
@@ -626,14 +590,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.2f, z + 0.45f));
         backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
     }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballBoardBackDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
-    shader.setMat4("model", backBoardObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // Top edge of backboard ----------------------------------------------------
     glm::mat4 topEdgeBoardObj = glm::mat4();
@@ -650,14 +606,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
-    shader.setMat4("model", topEdgeBoardObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Bottom edge of backboard -------------------------------------------------
     glm::mat4 botEdgeBoardObj = glm::mat4();
 
@@ -672,14 +620,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.7f, z + 0.475f));
         botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
     }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
-    shader.setMat4("model", botEdgeBoardObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // Left edge of backboard ---------------------------------------------------
     glm::mat4 leftEdgeBoardObj = glm::mat4();
@@ -696,14 +636,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
-    shader.setMat4("model", leftEdgeBoardObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Right edge of backboard --------------------------------------------------
     glm::mat4 rightEdgeBoardObj = glm::mat4();
 
@@ -718,14 +650,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.2f, z + 0.475f));
         rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballBoardEdgeDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
-    shader.setMat4("model", rightEdgeBoardObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // Ring base ----------------------------------------------------------------
     glm::mat4 ringBaseObj = glm::mat4();
@@ -742,14 +666,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         ringBaseObj = glm::scale(ringBaseObj, glm::vec3(0.05f, 0.05f, 0.1f));
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", ringBaseObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Ring back ----------------------------------------------------------------
     glm::mat4 ringBackObj = glm::mat4();
 
@@ -764,14 +680,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         ringBackObj = glm::translate(ringBackObj, glm::vec3(x, y + 0.85f, z + 0.625f));
         ringBackObj = glm::scale(ringBackObj, glm::vec3(0.25f, 0.05f, 0.025f));
     }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", ringBackObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // Ring front ----------------------------------------------------------------
     glm::mat4 ringFrontObj = glm::mat4();
@@ -788,14 +696,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         ringFrontObj = glm::scale(ringFrontObj, glm::vec3(0.25f, 0.05f, 0.025f));
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", ringFrontObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Ring left
     glm::mat4 ringLeftObj = glm::mat4();
 
@@ -810,14 +710,6 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         ringLeftObj = glm::translate(ringLeftObj, glm::vec3(x - 0.137f, y + 0.85f, z + 0.737f));
         ringLeftObj = glm::scale(ringLeftObj, glm::vec3(0.025f, 0.05f, 0.25f));
     }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", ringLeftObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
 
     // Ring right
     glm::mat4 ringRightObj = glm::mat4();
@@ -834,283 +726,208 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
         ringRightObj = glm::scale(ringRightObj, glm::vec3(0.025f, 0.05f, 0.25f));
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballRingDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, highSpec);
-
-    shader.setMat4("model", ringRightObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+    applyTexture(shader, basePoleObj, bballPoleDiff, highSpec);
+    applyTexture(shader, horizonPoleObj, bballPoleDiff, highSpec);
+    applyTexture(shader, frontBoardObj, bballBoardFrontDiff, mildSpec);
+    applyTexture(shader, backBoardObj, bballBoardBackDiff, mildSpec);
+    applyTexture(shader, topEdgeBoardObj, bballBoardEdgeDiff, mildSpec);
+    applyTexture(shader, botEdgeBoardObj, bballBoardEdgeDiff, mildSpec);
+    applyTexture(shader, leftEdgeBoardObj, bballBoardEdgeDiff, mildSpec);
+    applyTexture(shader, rightEdgeBoardObj, bballBoardEdgeDiff, mildSpec);
+    applyTexture(shader, ringBaseObj, bballRingDiff, highSpec);
+    applyTexture(shader, ringBackObj, bballRingDiff, highSpec);
+    applyTexture(shader, ringFrontObj, bballRingDiff, highSpec);
+    applyTexture(shader, ringLeftObj, bballRingDiff, highSpec);
+    applyTexture(shader, ringRightObj, bballRingDiff, highSpec);
 }
 
 void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
 {
     glBindVertexArray(VAO);
 
+    glm::mat4 leftShoeObj = glm::mat4();
+    glm::mat4 rightShoeObj = glm::mat4();
+    glm::mat4 leftLegObj = glm::mat4();
+    glm::mat4 rightLegObj = glm::mat4();
+    glm::mat4 torsoObj = glm::mat4();
+    glm::mat4 backTorsoObj = glm::mat4();
+    glm::mat4 leftArmObj = glm::mat4();
+    glm::mat4 leftHandObj = glm::mat4();
+    glm::mat4 rightArmObj = glm::mat4();
+    glm::mat4 rightHandObj = glm::mat4();
+    glm::mat4 neckObj = glm::mat4();
+    glm::mat4 headObj = glm::mat4();
+    glm::mat4 chinObj = glm::mat4();
+    glm::mat4 hairObj = glm::mat4();
+    glm::mat4 backHeadObj = glm::mat4();
+    glm::mat4 leftHeadObj = glm::mat4();
+    glm::mat4 rightHeadObj = glm::mat4();
+
     // SHOES --------------------------------------------------------------------
     // Left shoe
-    glm::mat4 leftShoeObj = glm::mat4();
-
     leftShoeObj = glm::translate(leftShoeObj, glm::vec3(x, y + 0.045f, z));
     leftShoeObj = glm::scale(leftShoeObj, glm::vec3(0.15f, 0.10f, 0.25f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manShoeDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", leftShoeObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Right shoe
-    glm::mat4 rightShoeObj = glm::mat4();
-
     rightShoeObj = glm::translate(rightShoeObj, glm::vec3(x + 0.25f, y + 0.045f, z));
     rightShoeObj = glm::scale(rightShoeObj, glm::vec3(0.15f, 0.10f, 0.25f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manShoeDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", rightShoeObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // // LEGS ---------------------------------------------------------------------
     // Left leg
-    glm::mat4 leftLegObj = glm::mat4();
-
     leftLegObj = glm::translate(leftLegObj, glm::vec3(x, y + 0.27f, z + 0.05f));
     leftLegObj = glm::scale(leftLegObj, glm::vec3(0.15f, 0.35f, 0.15f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manLegsDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", leftLegObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Right leg
-    glm::mat4 rightLegObj = glm::mat4();
-
     rightLegObj = glm::translate(rightLegObj, glm::vec3(x + 0.25f, y + 0.27f, z + 0.05f));
     rightLegObj = glm::scale(rightLegObj, glm::vec3(0.15f, 0.35f, 0.15f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manLegsDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", rightLegObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // TORSO --------------------------------------------------------------------
     // Base torso
-    glm::mat4 torsoObj = glm::mat4();
-
     torsoObj = glm::translate(torsoObj, glm::vec3(x + 0.125f, y + 0.67f, z + 0.05f));
     torsoObj = glm::scale(torsoObj, glm::vec3(0.4f, 0.45f, 0.15f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manTopDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", torsoObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // Back torso
-    glm::mat4 backTorsoObj = glm::mat4();
-
     backTorsoObj = glm::translate(backTorsoObj, glm::vec3(x+ 0.125f, y + 0.67f, z + 0.125f));
     backTorsoObj = glm::rotate(backTorsoObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
     backTorsoObj = glm::rotate(backTorsoObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
     backTorsoObj = glm::scale(backTorsoObj, glm::vec3(0.4f, 0.45f, 0.01f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manTopBackDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", backTorsoObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // ARMS ---------------------------------------------------------------------
     // For arm animations
-    unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
     float scaleAmount = sin(glfwGetTime() * 8.0f);
 
-    // Left arm sleave
-    glm::mat4 leftArmObj = glm::mat4();
+    if(playAnimation)
+    {
+        leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
+        leftArmObj = glm::rotate(leftArmObj, glm::radians(-10.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
-    leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
-    leftArmObj = glm::rotate(leftArmObj, glm::radians(-10.0f), glm::vec3(0.0, 1.0, 0.0));
-    leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
-    leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
+        leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.07f, y + 0.675f, z - 0.09f));
+        leftHandObj = glm::rotate(leftHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
+        leftHandObj = glm::rotate(leftHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manTopDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
+        rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
+        rightArmObj = glm::rotate(rightArmObj, glm::radians(10.0f), glm::vec3(0.0, 1.0, 0.0));
+        rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
-    shader.setMat4("model", leftArmObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+        rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.32f, y + 0.675f, z - 0.09f));
+        rightHandObj = glm::rotate(rightHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
+        rightHandObj = glm::rotate(rightHandObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
+        rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
+    }
+    else
+    {
+        leftArmObj = glm::translate(leftArmObj, glm::vec3(x - 0.13f, y + 0.8f, z + 0.05f));
+        leftArmObj = glm::rotate(leftArmObj, glm::radians(-10.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftArmObj = glm::rotate(leftArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
-    // Left hand
-    glm::mat4 leftHandObj = glm::mat4();
+        leftHandObj = glm::translate(leftHandObj, glm::vec3(x, y + 0.675f, z - 0.09f));
+        leftHandObj = glm::rotate(leftHandObj, glm::radians(-40.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftHandObj = glm::rotate(leftHandObj, glm::radians(-10.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
-    leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.07f, y + 0.675f, z - 0.09f));
-    leftHandObj = glm::rotate(leftHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
-    leftHandObj = glm::rotate(leftHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
-    leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
+        rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
+        rightArmObj = glm::rotate(rightArmObj, glm::radians(10.0f), glm::vec3(0.0, 1.0, 0.0));
+        rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manNeckDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", leftHandObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
-    // Right arm sleave
-    glm::mat4 rightArmObj = glm::mat4();
-
-    rightArmObj = glm::translate(rightArmObj, glm::vec3(x + 0.38f, y + 0.8f, z + 0.05f));
-    rightArmObj = glm::rotate(rightArmObj, glm::radians(10.0f), glm::vec3(0.0, 1.0, 0.0));
-    rightArmObj = glm::rotate(rightArmObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
-    rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manTopDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", rightArmObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
-    // Right hand
-    glm::mat4 rightHandObj = glm::mat4();
-
-    rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.32f, y + 0.675f, z - 0.09f));
-    rightHandObj = glm::rotate(rightHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
-    rightHandObj = glm::rotate(rightHandObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
-    rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
-
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(rightHandObj));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manNeckDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", rightHandObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+        rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.40f, y + 0.675f, z - 0.09f));
+        rightHandObj = glm::rotate(rightHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
+        rightHandObj = glm::rotate(rightHandObj, glm::radians(-10.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
+    }
 
     // NECK ---------------------------------------------------------------------
-    glm::mat4 neckObj = glm::mat4();
-
     neckObj = glm::translate(neckObj, glm::vec3(x + 0.125f, y + 0.92f, z + 0.05f));
     neckObj = glm::scale(neckObj, glm::vec3(0.1f, 0.05f, 0.1f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manNeckDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", neckObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
     // HEAD ---------------------------------------------------------------------
-    // Face
-    glm::mat4 headObj = glm::mat4();
+    if(playAnimation)
+    {
+        // Head box
+        headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
+        headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
 
-    headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
-    headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-    headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
-    headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
+        // Chin
+        chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
+        chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manFaceDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
+        // Hair
+        hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
+        hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
 
-    shader.setMat4("model", headObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+        // Back of head
+        backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.18f));
+        backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+        backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
 
-    // Chin
-    glm::mat4 chinObj = glm::mat4();
+        // Left of head
+        leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x, y + 1.07f, z + 0.05f));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
 
-    chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
-    chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
+        // Right of head
+        rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.25f, y + 1.07f, z + 0.05f));
+        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
+    }
+    else
+    {
+        // Head box
+        headObj = glm::translate(headObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.05f));
+        headObj = glm::rotate(headObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::rotate(headObj, glm::radians(180.0f), glm::vec3(1.0, 0.0, 0.0));
+        headObj = glm::scale(headObj, glm::vec3(0.25f, 0.25f , 0.25f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manNeckDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
+        // Chin
+        chinObj = glm::translate(chinObj, glm::vec3(x + 0.125f, y + 0.945f, z + 0.05f));
+        chinObj = glm::scale(chinObj, glm::vec3(0.24f, 0.01f, 0.24f));
 
-    shader.setMat4("model", chinObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+        // Hair
+        hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
+        hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
 
-    // Hair
-    glm::mat4 hairObj = glm::mat4();
+        // Back of head
+        backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.18f));
+        backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+        backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
 
-    hairObj = glm::translate(hairObj, glm::vec3(x + 0.125f, y + 1.2f, z + 0.05f));
-    hairObj = glm::scale(hairObj, glm::vec3(0.25f, 0.01f, 0.25f));
+        // Left of head
+        leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x, y + 1.07f, z + 0.05f));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
+        leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
+        leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manHeadTopDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
+        // Right of head
+        rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.25f, y + 1.07f, z + 0.05f));
+        rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+        rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
+    }
 
-    shader.setMat4("model", hairObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
-    // Back of head
-    glm::mat4 backHeadObj = glm::mat4();
-
-    backHeadObj = glm::translate(backHeadObj, glm::vec3(x + 0.125f, y + 1.07f, z + 0.18f));
-    backHeadObj = glm::rotate(backHeadObj, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
-    backHeadObj = glm::scale(backHeadObj, glm::vec3(0.25f, 0.25f, 0.01f));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manHeadBackDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", backHeadObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
-    // Left of head
-    glm::mat4 leftHeadObj = glm::mat4();
-
-    leftHeadObj = glm::translate(leftHeadObj, glm::vec3(x, y + 1.07f, z + 0.05f));
-    leftHeadObj = glm::rotate(leftHeadObj, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-    leftHeadObj = glm::rotate(leftHeadObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
-    leftHeadObj = glm::scale(leftHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manHeadLeftDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", leftHeadObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
-
-    // Right of head
-    glm::mat4 rightHeadObj = glm::mat4();
-
-    rightHeadObj = glm::translate(rightHeadObj, glm::vec3(x + 0.25f, y + 1.07f, z + 0.05f));
-    rightHeadObj = glm::rotate(rightHeadObj, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
-    rightHeadObj = glm::scale(rightHeadObj, glm::vec3(0.01f, 0.25f, 0.25f));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, manHeadRightDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, noSpec);
-
-    shader.setMat4("model", rightHeadObj);
-    glDrawArrays(GL_TRIANGLES, 0 , 36);
+    applyTexture(shader, leftShoeObj, manShoeDiff, noSpec);
+    applyTexture(shader, rightShoeObj, manShoeDiff, noSpec);
+    applyTexture(shader, leftLegObj, manLegsDiff, noSpec);
+    applyTexture(shader, rightLegObj, manLegsDiff, noSpec);
+    applyTexture(shader, torsoObj, manTopDiff, noSpec);
+    applyTexture(shader, backTorsoObj, manTopBackDiff, noSpec);
+    applyTexture(shader, leftArmObj, manTopDiff, noSpec);
+    applyTexture(shader, leftHandObj, manNeckDiff, noSpec);
+    applyTexture(shader, rightArmObj, manTopDiff, noSpec);
+    applyTexture(shader, rightHandObj, manNeckDiff, noSpec);
+    applyTexture(shader, headObj, manFaceDiff, noSpec);
+    applyTexture(shader, neckObj, manNeckDiff, noSpec);
+    applyTexture(shader, chinObj, manNeckDiff, noSpec);
+    applyTexture(shader, hairObj, manHeadTopDiff, noSpec);
+    applyTexture(shader, backHeadObj, manHeadBackDiff, noSpec);
+    applyTexture(shader, leftHeadObj, manHeadLeftDiff, noSpec);
+    applyTexture(shader, rightHeadObj, manHeadRightDiff, noSpec);
 }
 
 void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballDiff, unsigned int mildSpec)
@@ -1118,12 +935,9 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
     float scaleAmount;
     glBindVertexArray(VAO);
 
-    // For ball animation
-    unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
-
     glm::mat4 bballObj = glm::mat4();
 
-    if(!playAnimation)
+    if(playAnimation)
     {
         ballDistance = 1.0;
         scaleAmount = sin(glfwGetTime() * 8.0f);
@@ -1134,21 +948,31 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
     else
     {
         ballDistance++;
+
+        if(ballDistance == 150.0)
+        {
+            ballDistance--;
+        }
+
         scaleAmount = ballDistance * 0.25f;
         bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, z - 0.15f));
+        bballObj = glm::rotate(bballObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
         bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, -scaleAmount));
     }
-    
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(bballObj));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, bballDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
 
     glTranslatef(1.0, 2.0, 0.0);
 
-    shader.setMat4("model", bballObj);
+    applyTexture(shader, bballObj, bballDiff, mildSpec);
+}
+
+void applyTexture(Shader shader, glm::mat4 obj, unsigned int diff, unsigned int spec)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diff);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, spec);
+
+    shader.setMat4("model", obj);
     glDrawArrays(GL_TRIANGLES, 0 , 36);
 }

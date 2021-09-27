@@ -21,6 +21,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 void update_delay();
+void applyTexture(Shader shader, glm::mat4 obj, unsigned int diff, unsigned int spec);
 
 // Transformations
 void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned int mildSpec);
