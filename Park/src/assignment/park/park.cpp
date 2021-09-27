@@ -3,6 +3,8 @@
 // SETTING
 const unsigned int SCR_WIDTH = 1000;
 const unsigned int SCR_HEIGHT = 800;
+const float LOWER_BOUNDS = 0.15f;
+const float UPPER_BOUNDS = 10.0f;
 
 // CAMERA
 Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
@@ -280,11 +282,11 @@ void processInput(GLFWwindow *window)
         cameraSpeed = 1.0f * deltaTime * 2;
 
     // [W] - Move forwards
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && camera.Position.y > LOWER_BOUNDS && camera.Position.y < UPPER_BOUNDS)
         camera.ProcessKeyboard(FORWARD, cameraSpeed);
     
     // [S] - Move backwards
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && camera.Position.y > LOWER_BOUNDS && camera.Position.y < UPPER_BOUNDS)
         camera.ProcessKeyboard(BACKWARD, cameraSpeed);
     
     // [A] - Straif left
@@ -296,11 +298,11 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(RIGHT, cameraSpeed);
     
     // [SPACEBAR] - Move vertically up
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && camera.Position.y < UPPER_BOUNDS)
 		camera.Position.y = camera.Position.y + 2.0f * cameraSpeed;
 	
     // [X] - Move vertically down
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && camera.Position.y > LOWER_BOUNDS)
 		camera.Position.y = camera.Position.y - 2.0f * cameraSpeed;
 
     // [F] - Toggle light to follow/stay
