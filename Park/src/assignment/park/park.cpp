@@ -18,6 +18,7 @@ float lastFrame = 0.0f;
 int brightnessTimer = 0;
 int lightTimer = 0;
 int projectionTimer = 0;
+int animationTimer = 0;
 
 // LIGHT
 float amb = 1.0f;
@@ -30,10 +31,9 @@ bool brightToggle = false;
 bool lightStay = false;
 bool orthographic = false;
 
-// ANIMATIONS
-float ballAni [] = {0.75, 0.65, 0.55, 0.45, 0.35, 0.25, 0.15, 0.05};
-int aniStep = 7;
-bool ballDown = true;
+// ANIMATION TRIGGER
+bool playAnimation = false;
+float ballDistance = 1.0;
 
 
 int main()
@@ -238,13 +238,10 @@ int main()
         manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
         bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
 
-
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
-        glfwPollEvents();
-
-        
+        glfwPollEvents();        
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -356,6 +353,21 @@ void processInput(GLFWwindow *window)
             orthographic = true;
         }
     }
+
+    // [R] - Play/Reset Animations
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && animationTimer == 0)
+    {
+        animationTimer = 20;
+
+        if(!playAnimation)
+        {
+            playAnimation = true;
+        }
+        else
+        {
+            playAnimation = false;
+        }
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -448,6 +460,11 @@ void update_delay()
     if(projectionTimer > 0)
     {
          projectionTimer -= 1;
+    }
+    
+    if(animationTimer > 0)
+    {
+         animationTimer -= 1;
     }
 }
 
@@ -1098,17 +1115,30 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 
 void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballDiff, unsigned int mildSpec)
 {
+    float scaleAmount;
     glBindVertexArray(VAO);
 
     // For ball animation
     unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
-    float scaleAmount = sin(glfwGetTime() * 8.0f);
 
     glm::mat4 bballObj = glm::mat4();
 
-    bballObj = glm::translate(bballObj, glm::vec3(x, y, z));
-    bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
-    bballObj = glm::translate(bballObj, glm::vec3(x, scaleAmount * 1.5f, z));
+    if(!playAnimation)
+    {
+        ballDistance = 1.0;
+        scaleAmount = sin(glfwGetTime() * 8.0f);
+        bballObj = glm::translate(bballObj, glm::vec3(x, y, z));
+        bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
+        bballObj = glm::translate(bballObj, glm::vec3(x, scaleAmount * 1.5f, z));
+    }
+    else
+    {
+        ballDistance++;
+        scaleAmount = ballDistance * 0.25f;
+        bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, z - 0.15f));
+        bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
+        bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, -scaleAmount));
+    }
     
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(bballObj));
 
