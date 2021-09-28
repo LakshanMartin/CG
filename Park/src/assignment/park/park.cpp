@@ -84,7 +84,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
     Shader shader("5.4.light_casters.vs", "5.4.light_casters.fs");
-    Shader lampShader("5.4.lamp.vs", "5.4.lamp.fs");
+    Shader skyShader("5.4.lamp.vs", "5.4.lamp.fs");
 
     // SETUP TEXTURES -----------------------------------------------------------
     unsigned int noSpec = loadTexture(FileSystem::getPath("resources/textures/no_spec.png").c_str());
@@ -115,7 +115,7 @@ int main()
     unsigned int dogHeadDiff = loadTexture(FileSystem::getPath("resources/textures/dog_head.png").c_str());
     unsigned int dogBodyDiff = loadTexture(FileSystem::getPath("resources/textures/dog_fur.png").c_str());
     unsigned int birdDiff = loadTexture(FileSystem::getPath("resources/textures/bird.png").c_str());
-    
+    unsigned int skyDiff = loadTexture(FileSystem::getPath("resources/textures/sky.jpg").c_str());
 
 
     // first, configure the cube's VAO (and VBO)
@@ -195,12 +195,9 @@ int main()
             shader.setVec3("light.position", camera.Position);
         }
 
-        // lightingShader.setVec3("light.position", camera.Position);
-        // lightingShader.setVec3("light.direction", camera.Front);
         shader.setVec3("light.direction", camera.Position);
         shader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
         shader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-        // lightingShader.setVec3("viewPos", camera.Position);
 
         // light properties
         // we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
@@ -221,7 +218,7 @@ int main()
         // view/projection transformations
         if(orthographic)
         {
-            projection = glm::ortho(-10.0f, 10.0f, -2.0f, 10.0f, -100.0f, 200.0f);
+            projection = glm::ortho(-10.0f, 10.0f, -2.0f, 10.0f, -10.0f, 200.0f);
         }
         else
         {
@@ -235,6 +232,9 @@ int main()
         // world transformation
         glm::mat4 model;
         shader.setMat4("model", model);
+
+        // DRAW SKY BOX
+        skyDraw(VAO, shader, skyDiff, noSpec);
 
         // DRAW OBJECTS ---------------------------------------------------------
         grassDraw(VAO, shader, grassDiff, mildSpec);
@@ -488,22 +488,27 @@ void update_delay()
     }
 }
 
+void skyDraw(unsigned int VAO, Shader shader, unsigned int skyDiff, unsigned int noSpec)
+{
+    glBindVertexArray(VAO);
+
+    glm::mat4 skyObj = glm::mat4();
+    
+    skyObj = glm::scale(skyObj, glm::vec3(50.0f, 50.0f, 50.0f));
+
+    applyTexture(shader, skyObj, skyDiff, noSpec);
+}
+
 void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned int mildSpec)
 {
         glBindVertexArray(VAO);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, grassDiff);
-		glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, mildSpec);
-
 		glm::mat4 grassObj = glm::mat4();
-		grassObj = glm::translate(grassObj, glm::vec3(0.0f, -0.01f, 0.0f));
-		grassObj = glm::scale(grassObj, glm::vec3(50.0f, 0.0f, 50.0f));
 
-		shader.setMat4("model", grassObj);
+		grassObj = glm::translate(grassObj, glm::vec3(0.0f, -0.51f, 0.0f));
+		grassObj = glm::scale(grassObj, glm::vec3(25.0f, 1.0f, 25.0f));
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+        applyTexture(shader, grassObj, grassDiff, mildSpec);
 }
 
 void bballCourtDraw(unsigned int VAO, Shader shader, unsigned int courtDiff, unsigned int noSpec)
@@ -522,6 +527,7 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
 
     // Tree trunk
     glm::mat4 trunkObj = glm::mat4();;
+
     trunkObj = glm::translate(trunkObj, glm::vec3(x, y, z));
     trunkObj = glm::scale(trunkObj, glm::vec3(0.20f, 2.0f, 0.20f));
 
@@ -539,21 +545,15 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
         glm::vec3( x - 0.3f, y + 1.6f, z )
     };
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, treeTopDiff);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mildSpec);
-
     for(int i = 0; i < 3; i++)
     {	
         glm::mat4 treeTopObj = glm::mat4();
+        
         treeTopObj = glm::translate(treeTopObj, treeTop_positions[i]);
         treeTopObj = glm::scale(treeTopObj, treeTop_scales[i]);
         treeTopObj = glm::translate(treeTopObj, glm::vec3(1.0f, 0.5f, 0.0f));
-
-        shader.setMat4("model", treeTopObj);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+    
+        applyTexture(shader, treeTopObj, treeTopDiff, mildSpec);
     }
 }
 
