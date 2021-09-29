@@ -84,7 +84,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
     Shader shader("5.4.light_casters.vs", "5.4.light_casters.fs");
-    Shader skyShader("5.4.lamp.vs", "5.4.lamp.fs");
+    // Shader skyShader("5.4.lamp.vs", "5.4.lamp.fs");
 
     // SETUP TEXTURES -----------------------------------------------------------
     unsigned int noSpec = loadTexture(FileSystem::getPath("resources/textures/no_spec.png").c_str());
@@ -245,7 +245,7 @@ int main()
         manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
         bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
         dogDraw(3.0f, 0.2f, -3.0f, VAO, shader, dogHeadDiff, dogBodyDiff, noSpec);
-        birdDraw(3.0f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
+        birdDraw(2.9f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -1002,8 +1002,8 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
 
 void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int dogHeadDiff, unsigned int dogBodyDiff, unsigned int noSpec)
 {
-    float headScaleAmount;
-    float bodyScaleAmount;
+    float headScaleY;
+    float bodyScaleY;
 
     glBindVertexArray(VAO);
 
@@ -1031,25 +1031,25 @@ void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
         {
             dogDistance--;
 
-            headScaleAmount = sin(glfwGetTime() * 4.0f);
-            bodyScaleAmount = sin(glfwGetTime() * 4.0f);
+            headScaleY = sin(glfwGetTime() * 4.0f);
+            bodyScaleY = sin(glfwGetTime() * 4.0f);
 
-            dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 3.5f, headScaleAmount * 0.1f, z + 3.5f));
-            dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 3.5f, bodyScaleAmount * 0.1f, z + 3.5f));
+            dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 3.0f, headScaleY * 0.1f, z + 3.5f));
+            dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 3.0f, bodyScaleY * 0.1f, z + 3.5f));
         }
 
-        headScaleAmount = dogDistance * 0.35f;
-        bodyScaleAmount = dogDistance * 0.25f;
+        headScaleY = dogDistance * 0.35f;
+        bodyScaleY = dogDistance * 0.25f;
 
         // Translation path of the dog
-        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y + 0.05f, z));
+        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 0.45f, y + 0.05f, z));
         dogHeadObj = glm::scale(dogHeadObj, glm::vec3(0.15f, 0.15f, 0.25f));
-        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, -headScaleAmount));
+        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, -headScaleY));
         dogHeadObj = glm::rotate(dogHeadObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
 
-        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x, y, z + 0.25f));
+        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 0.45f, y, z + 0.25f));
         dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
-        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleAmount));
+        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleY));
     }
 
     applyTexture(shader, dogHeadObj, dogHeadDiff, noSpec);
@@ -1058,7 +1058,7 @@ void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 
 void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int birdDiff,unsigned int noSpec)
 {
-    float scaleAmount;
+    float scaleX, scaleY, scaleZ;
 
     glBindVertexArray(VAO);
 
@@ -1067,12 +1067,13 @@ void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     if(playAnimation)
     {
         birdDistance = 1.0;
-        scaleAmount = sin(glfwGetTime() * 4.0f);
+        scaleY = sin(glfwGetTime() * 4.0f);
 
         // Original position of bird flying up and down 
         birdObj = glm::translate(birdObj, glm::vec3(x, y, z));
-        birdObj = glm::scale(birdObj, glm::vec3(0.1f, 0.1f, 0.15f));
-        birdObj = glm::translate(birdObj, glm::vec3(x - 2.5f, scaleAmount, z));
+        birdObj = glm::scale(birdObj, glm::vec3(0.1f, 0.1f, 0.15f)); // Scaling
+        birdObj = glm::translate(birdObj, glm::vec3(1.0, scaleY, 1.0)); // Up and down animation
+        
     }
     else
     {
@@ -1083,17 +1084,18 @@ void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
         {
             birdDistance--;
 
-            scaleAmount = sin(glfwGetTime() * 4.0f);
+            scaleX = sin(glfwGetTime() * 1.5f);
+            scaleZ = cos(glfwGetTime() * 1.5f);
 
-            birdObj = glm::translate(birdObj, glm::vec3(-scaleAmount, y - 1.0f, z + 4.0f));
+            birdObj = glm::translate(birdObj, glm::vec3(-scaleX, y - 1.0f, scaleZ + 1.5f));
         }
 
-        scaleAmount = birdDistance * 0.65f;
+        scaleZ = birdDistance * 0.65f;
 
         // Translation path of the bird
-        birdObj = glm::translate(birdObj, glm::vec3(x, y, z));
+        birdObj = glm::translate(birdObj, glm::vec3(x - 0.18f, y, z));
         birdObj = glm::scale(birdObj, glm::vec3(0.1f, 0.1f, 0.15f));
-        birdObj = glm::translate(birdObj, glm::vec3(x, y, -scaleAmount));
+        birdObj = glm::translate(birdObj, glm::vec3(x, y, -scaleZ));
     }
 
     applyTexture(shader, birdObj, birdDiff, noSpec);
