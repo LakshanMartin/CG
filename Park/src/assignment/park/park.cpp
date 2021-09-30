@@ -119,6 +119,9 @@ int main()
     unsigned int birdDiff = loadTexture(FileSystem::getPath("resources/textures/bird.png").c_str());
     unsigned int skyDiff = loadTexture(FileSystem::getPath("resources/textures/sky.jpg").c_str());
     unsigned int playFloorDiff = loadTexture(FileSystem::getPath("resources/textures/play_floor.png").c_str());
+    unsigned int swingFrameDiff = loadTexture(FileSystem::getPath("resources/textures/log.png").c_str());
+    unsigned int swingRopeDiff = loadTexture(FileSystem::getPath("resources/textures/rope.png").c_str());
+    unsigned int swingSeatDiff = loadTexture(FileSystem::getPath("resources/textures/swing_seat.png").c_str());
 
     // first, configure the cube's VAO (and VBO)
     unsigned int VBO, VAO;
@@ -248,14 +251,15 @@ int main()
         dogDraw(3.0f, 0.2f, -3.0f, VAO, shader, dogHeadDiff, dogBodyDiff, noSpec);
         birdDraw(2.9f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
         playFloorDraw(VAO, shader, playFloorDiff, noSpec);
+        swingDraw(VAO, shader, swingFrameDiff, swingRopeDiff, swingSeatDiff, noSpec, mildSpec);
 
         // DRAW TREE BARRIERS
         for(int i = -12; i <= 12; i++)
         {
-            treeDraw(i, 1.0f, 12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(-12.0f, 1.0f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(i, 1.0f, -12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(12.0f, 1.0f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 2.5f, 12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(-12.0f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 2.5f, -12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(12.0f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -621,12 +625,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     if(isSecond)
     {
         frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.2f, z - 0.5f));
-        frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+        frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.5f, 1.0f, 0.05f));
     }
     else
     {
         frontBoardObj = glm::translate(frontBoardObj, glm::vec3(x, y + 1.2f, z + 0.5f));
-        frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+        frontBoardObj = glm::scale(frontBoardObj, glm::vec3(1.5f, 1.0f, 0.05f));
     }
 
     // Back of backboard --------------------------------------------------------
@@ -636,12 +640,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     if(isSecond)
     {
         backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.2f, z - 0.45f));
-        backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+        backBoardObj = glm::scale(backBoardObj, glm::vec3(1.5f, 1.0f, 0.05f));
     }
     else
     {
         backBoardObj = glm::translate(backBoardObj, glm::vec3(x, y + 1.2f, z + 0.45f));
-        backBoardObj = glm::scale(backBoardObj, glm::vec3(1.0f, 1.0f, 0.05f));
+        backBoardObj = glm::scale(backBoardObj, glm::vec3(1.5f, 1.0f, 0.05f));
     }
 
     // Top edge of backboard ----------------------------------------------------
@@ -651,12 +655,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     if(isSecond)
     {
         topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.7f, z - 0.475f));
-        topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+        topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.5f, 0.01f, 0.1f));
     }
     else
     {
         topEdgeBoardObj = glm::translate(topEdgeBoardObj, glm::vec3(x, y + 1.7f, z + 0.475f));
-        topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+        topEdgeBoardObj = glm::scale(topEdgeBoardObj, glm::vec3(1.5f, 0.01f, 0.1f));
     }
 
     // Bottom edge of backboard -------------------------------------------------
@@ -666,12 +670,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     if(isSecond)
     {
         botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.7f, z - 0.475f));
-        botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+        botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.5f, 0.01f, 0.1f));
     }
     else
     {
         botEdgeBoardObj = glm::translate(botEdgeBoardObj, glm::vec3(x, y + 0.7f, z + 0.475f));
-        botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.0f, 0.01f, 0.1f));
+        botEdgeBoardObj = glm::scale(botEdgeBoardObj, glm::vec3(1.5f, 0.01f, 0.1f));
     }
 
     // Left edge of backboard ---------------------------------------------------
@@ -680,12 +684,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.2f, z - 0.475f));
+        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x + 0.75f, y + 1.2f, z - 0.475f));
         leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
     else
     {
-        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.2f, z + 0.475f));
+        leftEdgeBoardObj = glm::translate(leftEdgeBoardObj, glm::vec3(x - 0.75f, y + 1.2f, z + 0.475f));
         leftEdgeBoardObj = glm::scale(leftEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
 
@@ -695,12 +699,12 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     // Check which basketball ring to draw
     if(isSecond)
     {
-        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x - 0.5f, y + 1.2f, z - 0.475f));
+        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x - 0.75f, y + 1.2f, z - 0.475f));
         rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
     else
     {
-        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x + 0.5f, y + 1.2f, z + 0.475f));
+        rightEdgeBoardObj = glm::translate(rightEdgeBoardObj, glm::vec3(x + 0.75f, y + 1.2f, z + 0.475f));
         rightEdgeBoardObj = glm::scale(rightEdgeBoardObj, glm::vec3(0.01f, 1.0f, 0.1f));
     }
 
@@ -1153,8 +1157,8 @@ void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
 void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, unsigned int noSpec)
 {
     float x = 7.0f;
-    float y = 0.0f;
-    float z = 0.0f;
+    float y = -0.05f;
+    float z = 7.0f;
 
     glBindVertexArray(VAO);
 
@@ -1164,4 +1168,84 @@ void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, 
     floorObj = glm::scale(floorObj, glm::vec3(5.0f, -0.1f, -5.0f));
 
     applyTexture(shader, floorObj, playFloorDiff, noSpec);
+}
+
+void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, unsigned int swingRopeDiff, unsigned int swingSeatDiff, unsigned int noSpec, unsigned int mildSpec)
+{
+    float x = 7.0f;
+    float y = -0.05f;
+    float z = 7.0f;
+
+    glBindVertexArray(VAO);
+
+    // Base frame objects
+    glm::mat4 bf1Obj = glm::mat4();
+    glm::mat4 bf2Obj = glm::mat4();
+    glm::mat4 bf3Obj = glm::mat4();
+    glm::mat4 bf4Obj = glm::mat4();
+    glm::mat4 bf5Obj = glm::mat4();
+    glm::mat4 bf6Obj = glm::mat4();
+
+    // Cross bar frame object (Bar connecting left and right 'A' frames)
+    glm::mat4 barFrameObj = glm::mat4();
+
+    // Seat objects
+    glm::mat4 rope1Obj = glm::mat4();
+    glm::mat4 rope2Obj = glm::mat4();
+    glm::mat4 seatObj = glm::mat4();
+
+    // Base frame transformations
+    bf1Obj = glm::translate(bf1Obj, glm::vec3(x, y, z - 2.0f));
+    bf1Obj = glm::rotate(bf1Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
+    bf1Obj = glm::rotate(bf1Obj, glm::radians(30.0f), glm::vec3(1.0, 0.0, 0.0));
+    bf1Obj = glm::rotate(bf1Obj, glm::radians(5.0f), glm::vec3(0.0, 0.0, 1.0));
+    bf1Obj = glm::scale(bf1Obj, glm::vec3(0.1f, 6.0f, 0.1f));
+
+    bf2Obj = glm::translate(bf2Obj, glm::vec3(x + 2.0f, y, z));
+    bf2Obj = glm::rotate(bf2Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
+    bf2Obj = glm::rotate(bf2Obj, glm::radians(-30.0f), glm::vec3(1.0, 0.0, 0.0));
+    bf2Obj = glm::rotate(bf2Obj, glm::radians(5.0f), glm::vec3(0.0, 0.0, 1.0));
+    bf2Obj = glm::scale(bf2Obj, glm::vec3(0.1f, 6.0f, 0.1f));
+
+    bf3Obj = glm::translate(bf3Obj, glm::vec3(x + 0.97f, y + 0.5f, z - 0.97f));
+    bf3Obj = glm::rotate(bf3Obj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    bf3Obj = glm::rotate(bf3Obj, glm::radians(5.0f), glm::vec3(1.0, 0.0, 0.0));
+    bf3Obj = glm::scale(bf3Obj, glm::vec3(2.25f, 0.1f, 0.1f));
+
+    bf4Obj = glm::translate(bf4Obj, glm::vec3(x, y, z + 2.0f));
+    bf4Obj = glm::rotate(bf4Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
+    bf4Obj = glm::rotate(bf4Obj, glm::radians(-30.0f), glm::vec3(1.0, 0.0, 0.0));
+    bf4Obj = glm::rotate(bf4Obj, glm::radians(-5.0f), glm::vec3(0.0, 0.0, 1.0));
+    bf4Obj = glm::scale(bf4Obj, glm::vec3(0.1f, 6.0f, 0.1f));
+
+    bf5Obj = glm::translate(bf5Obj, glm::vec3(x - 2.0f, y, z));
+    bf5Obj = glm::rotate(bf5Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
+    bf5Obj = glm::rotate(bf5Obj, glm::radians(30.0f), glm::vec3(1.0, 0.0, 0.0));
+    bf5Obj = glm::rotate(bf5Obj, glm::radians(-5.0f), glm::vec3(0.0, 0.0, 1.0));
+    bf5Obj = glm::scale(bf5Obj, glm::vec3(0.1f, 6.0f, 0.1f));
+
+    bf6Obj = glm::translate(bf6Obj, glm::vec3(x - 0.97f, y + 0.5f, z + 0.97f));
+    bf6Obj = glm::rotate(bf6Obj, glm::radians(-45.0f), glm::vec3(0.0, 1.0, 0.0));
+    bf6Obj = glm::rotate(bf6Obj, glm::radians(-5.0f), glm::vec3(1.0, 0.0, 0.0));
+    bf6Obj = glm::scale(bf6Obj, glm::vec3(2.25f, 0.1f, 0.1f));
+
+    // Cross bar frame transformations
+    barFrameObj = glm::translate(barFrameObj, glm::vec3(x, y + 2.5f, z));
+    barFrameObj = glm::rotate(barFrameObj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
+    barFrameObj = glm::rotate(barFrameObj, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    barFrameObj = glm::scale(barFrameObj, glm::vec3(0.1f, 2.5f, 0.1f));
+
+    // Seat transformations
+    rope1Obj = glm::translate(rope1Obj, glm::vec3(x, y + 3.0f, z));
+    rope1Obj = glm::rotate(rope1Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
+    rope1Obj = glm::scale(rope1Obj, glm::vec3(0.1f, 0.1f, 0.1f));
+
+    applyTexture(shader, bf1Obj, swingFrameDiff, noSpec);
+    applyTexture(shader, bf2Obj, swingFrameDiff, noSpec);
+    applyTexture(shader, bf3Obj, swingFrameDiff, noSpec);
+    applyTexture(shader, bf4Obj, swingFrameDiff, noSpec);
+    applyTexture(shader, bf5Obj, swingFrameDiff, noSpec);
+    applyTexture(shader, bf6Obj, swingFrameDiff, noSpec);
+    applyTexture(shader, barFrameObj, swingFrameDiff, noSpec);
+    applyTexture(shader, rope1Obj, swingRopeDiff, noSpec);
 }
