@@ -17,8 +17,10 @@ bool firstMouse = true;
 // TIMING
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-int brightnessTimer = 0;
-int lightTimer = 0;
+int incBrightTimer = 0;
+int decBrightTimer = 0;
+int dayNightTimer = 0;
+int followStayTimer = 0;
 int projectionTimer = 0;
 int animationTimer = 0;
 
@@ -35,9 +37,9 @@ bool orthographic = false;
 
 // ANIMATION TRIGGER
 bool playAnimation = true;
-float ballDistance = 1.0;
-float dogDistance = 1.0;
-float birdDistance = 1.0;
+float ballDistance;
+float dogBodyDistance; 
+float birdDistance; 
 
 int main()
 {
@@ -84,7 +86,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
     Shader shader("5.4.light_casters.vs", "5.4.light_casters.fs");
-    // Shader skyShader("5.4.lamp.vs", "5.4.lamp.fs");
+    Shader skyShader("5.4.lamp.vs", "5.4.lamp.fs");
 
     // SETUP TEXTURES -----------------------------------------------------------
     unsigned int noSpec = loadTexture(FileSystem::getPath("resources/textures/no_spec.png").c_str());
@@ -116,7 +118,7 @@ int main()
     unsigned int dogBodyDiff = loadTexture(FileSystem::getPath("resources/textures/dog_fur.png").c_str());
     unsigned int birdDiff = loadTexture(FileSystem::getPath("resources/textures/bird.png").c_str());
     unsigned int skyDiff = loadTexture(FileSystem::getPath("resources/textures/sky.jpg").c_str());
-
+    unsigned int playFloorDiff = loadTexture(FileSystem::getPath("resources/textures/play_floor.png").c_str());
 
     // first, configure the cube's VAO (and VBO)
     unsigned int VBO, VAO;
@@ -239,13 +241,22 @@ int main()
         // DRAW OBJECTS ---------------------------------------------------------
         grassDraw(VAO, shader, grassDiff, mildSpec);
         bballCourtDraw(VAO, shader, bballCourtDiff, noSpec);
-        treeDraw(3.0f, 1.0f, 0.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         bballRingDraw(false, 0.0f, 1.0f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         bballRingDraw(true, 0.0f, 1.0f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
         bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
         dogDraw(3.0f, 0.2f, -3.0f, VAO, shader, dogHeadDiff, dogBodyDiff, noSpec);
         birdDraw(2.9f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
+        playFloorDraw(VAO, shader, playFloorDiff, noSpec);
+
+        // DRAW TREE BARRIERS
+        for(int i = -12; i <= 12; i++)
+        {
+            treeDraw(i, 1.0f, 12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(-12.0f, 1.0f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 1.0f, -12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(12.0f, 1.0f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -306,9 +317,9 @@ void processInput(GLFWwindow *window)
 		camera.Position.y = camera.Position.y - 2.0f * cameraSpeed;
 
     // [F] - Toggle light to follow/stay
-    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && lightTimer == 0)
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && followStayTimer == 0)
     {
-        lightTimer = 20;
+        followStayTimer = 20;
 
         if(!lightStay)
         {
@@ -322,19 +333,31 @@ void processInput(GLFWwindow *window)
     }
 
     // [K] - Reduce light brightness 
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && decBrightTimer == 0)
+    {
+        decBrightTimer = 20;
+    
         if(amb > -1.0) // lower limit
-            amb -= 0.2f;
+        {
+            amb -= 0.25f;
+        }
+    }
 
     // [L] - Increase light brightness
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS && incBrightTimer == 0)
+    {
+        incBrightTimer = 20;
+
         if(amb < 5.0) // upper limit
-            amb += 0.2f;
+        {
+            amb += 0.25f;
+        }
+    }
 
     // [O] - Toggle brightness on/off
-    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS && brightnessTimer == 0)
+    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS && dayNightTimer == 0)
     {
-        brightnessTimer = 20;
+        dayNightTimer = 20;
         
         if(brightToggle)
         {
@@ -467,14 +490,24 @@ void applyTexture(Shader shader, glm::mat4 obj, unsigned int diff, unsigned int 
 
 void update_delay()
 {
-    if(brightnessTimer > 0)
+    if(incBrightTimer > 0)
     {
-        brightnessTimer -= 1;
+        incBrightTimer -= 1;
     }
 
-    if(lightTimer > 0)
+    if(decBrightTimer > 0)
     {
-        lightTimer -= 1;
+        decBrightTimer -= 1;
+    }
+
+    if(dayNightTimer > 0)
+    {
+        dayNightTimer -= 1;
+    }
+
+    if(followStayTimer > 0)
+    {
+        followStayTimer -= 1;
     }
 
     if(projectionTimer > 0)
@@ -529,7 +562,7 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     glm::mat4 trunkObj = glm::mat4();;
 
     trunkObj = glm::translate(trunkObj, glm::vec3(x, y, z));
-    trunkObj = glm::scale(trunkObj, glm::vec3(0.20f, 2.0f, 0.20f));
+    trunkObj = glm::scale(trunkObj, glm::vec3(0.3f, 5.0f, 0.3f));
 
     applyTexture(shader, trunkObj, treeTrunkDiff, noSpec);
     
@@ -540,9 +573,9 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
         glm::vec3( 0.3f, 0.1f, 0.3f ),
     };
     glm::vec3 treeTop_positions[] = {
-        glm::vec3( x - 1.0f, y + 1.0f, z ),
-        glm::vec3( x - 0.6f, y + 1.4f, z ),
-        glm::vec3( x - 0.3f, y + 1.6f, z )
+        glm::vec3( x - 1.0f, y + 2.5f, z ),
+        glm::vec3( x - 0.6f, y + 2.9f, z ),
+        glm::vec3( x - 0.3f, y + 3.1f, z )
     };
 
     for(int i = 0; i < 3; i++)
@@ -825,8 +858,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
         leftArmObj = glm::scale(leftArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
         // Left hand
-        leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.07f, y + 0.675f, z - 0.09f));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
+        leftHandObj = glm::translate(leftHandObj, glm::vec3(x - 0.07f, y + 0.70f, z - 0.09f));
         leftHandObj = glm::rotate(leftHandObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         leftHandObj = glm::scale(leftHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
@@ -837,8 +870,8 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
         rightArmObj = glm::scale(rightArmObj, glm::vec3(0.1f, 0.15f, 0.1f));
 
         // Right hand
-        rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.32f, y + 0.675f, z - 0.09f));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(scaleAmount), glm::vec3(1.0, 0.0, 0.0));
+        rightHandObj = glm::translate(rightHandObj, glm::vec3(x + 0.32f, y + 0.70f, z - 0.09f));
         rightHandObj = glm::rotate(rightHandObj, glm::radians(30.0f), glm::vec3(0.0, 1.0, 0.0));
         rightHandObj = glm::scale(rightHandObj, glm::vec3(0.1f, 0.1f, 0.35f));
 
@@ -976,7 +1009,7 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
         scaleAmount = sin(glfwGetTime() * 8.0f);
         bballObj = glm::translate(bballObj, glm::vec3(x, y, z));
         bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
-        bballObj = glm::translate(bballObj, glm::vec3(x, scaleAmount * 1.5f, z));
+        bballObj = glm::translate(bballObj, glm::vec3(x, scaleAmount * 1.7f, z));
     }
     else
     {
@@ -987,12 +1020,12 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
             ballDistance--;
         }
 
-        scaleAmount = ballDistance * 0.25f;
+        scaleAmount = ballDistance * 0.2f;
 
         bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, z - 0.15f));
         bballObj = glm::rotate(bballObj, glm::radians(-30.0f), glm::vec3(0.0, 1.0, 0.0));
         bballObj = glm::scale(bballObj, glm::vec3(0.15f, 0.15f, 0.15f));
-        bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, -scaleAmount));
+        bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, -scaleAmount * 1.5f));
     }
 
     glTranslatef(1.0, 2.0, 0.0);
@@ -1002,17 +1035,20 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
 
 void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int dogHeadDiff, unsigned int dogBodyDiff, unsigned int noSpec)
 {
-    float headScaleY;
-    float bodyScaleY;
+    float headScaleZ;
+    float bodyScaleZ;
+    float legScaleZ;
 
     glBindVertexArray(VAO);
 
     glm::mat4 dogHeadObj = glm::mat4();
     glm::mat4 dogBodyObj = glm::mat4();
+    glm::mat4 dogLegs1Obj = glm::mat4();
+    glm::mat4 dogLegs2Obj = glm::mat4();
 
     if(playAnimation)
     {
-        dogDistance = 1.0;
+        dogBodyDistance = 1.0;
 
         // Original position of the dog
         dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, z));
@@ -1021,39 +1057,52 @@ void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 
         dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x, y, z + 0.25f));
         dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
+
+        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x, 0.0f, z + 0.1f));
+        dogLegs1Obj = glm::scale(dogLegs1Obj, glm::vec3(0.20f, 0.2f, 0.05f));
+
+        dogLegs2Obj = glm::translate(dogLegs2Obj, glm::vec3(x, 0.0f, z + 0.4f));
+        dogLegs2Obj = glm::scale(dogLegs2Obj, glm::vec3(0.20f, 0.2f, 0.05f));
     }
     else
     {
-        dogDistance++;
+        dogBodyDistance++;
 
         // End position animation of the dog jumping
-        if(dogDistance == 75.0)
+        if(dogBodyDistance == 75.0)
         {
-            dogDistance--;
+            dogBodyDistance--;
 
-            headScaleY = sin(glfwGetTime() * 4.0f);
-            bodyScaleY = sin(glfwGetTime() * 4.0f);
+            headScaleZ = sin(glfwGetTime() * 4.0f);
+            bodyScaleZ = sin(glfwGetTime() * 4.0f);
 
-            dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 3.0f, headScaleY * 0.1f, z + 3.5f));
-            dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 3.0f, bodyScaleY * 0.1f, z + 3.5f));
+            dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 3.0f, headScaleZ * 0.1f, z + 3.5f));
+            dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 3.0f, bodyScaleZ * 0.1f, z + 3.5f));
         }
 
-        headScaleY = dogDistance * 0.35f;
-        bodyScaleY = dogDistance * 0.25f;
+        headScaleZ = dogBodyDistance * 0.35f;
+        bodyScaleZ = dogBodyDistance * 0.25f;
+        legScaleZ = dogBodyDistance * 1.45f;
 
         // Translation path of the dog
         dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x - 0.45f, y + 0.05f, z));
         dogHeadObj = glm::scale(dogHeadObj, glm::vec3(0.15f, 0.15f, 0.25f));
-        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, -headScaleY));
+        dogHeadObj = glm::translate(dogHeadObj, glm::vec3(x, y, -headScaleZ));
         dogHeadObj = glm::rotate(dogHeadObj, glm::radians(25.0f), glm::vec3(1.0, 0.0, 0.0));
 
         dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 0.45f, y, z + 0.25f));
         dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
-        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleY));
+        dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleZ));
+
+        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.45f, y, z + 0.25f));
+        dogLegs1Obj = glm::scale(dogLegs1Obj, glm::vec3(0.20f, 0.2f, 0.05f));
+        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.75f, y - 1.0f, -legScaleZ * 1.25f));
     }
 
     applyTexture(shader, dogHeadObj, dogHeadDiff, noSpec);
     applyTexture(shader, dogBodyObj, dogBodyDiff, noSpec);
+    // applyTexture(shader, dogLegs1Obj, dogHeadDiff, noSpec);
+    // applyTexture(shader, dogLegs2Obj, dogHeadDiff, noSpec);
 }
 
 void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int birdDiff,unsigned int noSpec)
@@ -1099,4 +1148,20 @@ void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     }
 
     applyTexture(shader, birdObj, birdDiff, noSpec);
+}
+
+void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, unsigned int noSpec)
+{
+    float x = 7.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    glBindVertexArray(VAO);
+
+    glm::mat4 floorObj = glm::mat4();
+
+    floorObj = glm::translate(floorObj, glm::vec3(x, y, z));
+    floorObj = glm::scale(floorObj, glm::vec3(5.0f, -0.1f, -5.0f));
+
+    applyTexture(shader, floorObj, playFloorDiff, noSpec);
 }

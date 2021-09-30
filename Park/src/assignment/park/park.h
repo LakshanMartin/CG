@@ -36,6 +36,7 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballDiff, unsigned int mildSpec);
 void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int dogHeadDiff, unsigned int dogBodyDiff, unsigned int noSpec);
 void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int birdDiff,unsigned int noSpec);
+void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, unsigned int noSpec);
 
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
