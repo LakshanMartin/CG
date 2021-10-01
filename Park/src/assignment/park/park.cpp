@@ -1189,11 +1189,6 @@ void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, uns
     // Cross bar frame object (Bar connecting left and right 'A' frames)
     glm::mat4 barFrameObj = glm::mat4();
 
-    // Seat objects
-    glm::mat4 rope1Obj = glm::mat4();
-    glm::mat4 rope2Obj = glm::mat4();
-    glm::mat4 seatObj = glm::mat4();
-
     // Base frame transformations
     bf1Obj = glm::translate(bf1Obj, glm::vec3(x, y, z - 2.0f));
     bf1Obj = glm::rotate(bf1Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -1235,10 +1230,65 @@ void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, uns
     barFrameObj = glm::rotate(barFrameObj, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
     barFrameObj = glm::scale(barFrameObj, glm::vec3(0.1f, 2.5f, 0.1f));
 
+    // Rope transformations
+    glm::vec3 rope_translations[] = {
+        glm::vec3(x + 0.25f, y + 1.5f, z - 0.25f),
+        glm::vec3(x + 0.5f, y + 1.5f, z - 0.5f),
+        glm::vec3(x - 0.25f, y + 1.5f, z + 0.25f),
+        glm::vec3(x - 0.5f, y + 1.5f, z + 0.5f),
+    };
+
+    glm::vec3 rope_rotations[] = {
+        glm::vec3(0.0, 1.0, 0.0),
+        glm::vec3(0.0, 1.0, 0.0),
+        glm::vec3(0.0, 1.0, 0.0),
+        glm::vec3(0.0, 1.0, 0.0),
+    };
+
+    glm::vec3 rope_scaling[] = {
+        glm::vec3(0.015f, 2.0f, 0.015f),
+        glm::vec3(0.015f, 2.0f, 0.015f),
+        glm::vec3(0.015f, 2.0f, 0.015f),
+        glm::vec3(0.015f, 2.0f, 0.015f),
+    };
+
+    for(int i = 0; i < 4; i++)
+    {
+        glm::mat4 ropeObj = glm::mat4();
+
+        ropeObj = glm::translate(ropeObj, rope_translations[i]);
+        ropeObj = glm::rotate(ropeObj, glm::radians(45.0f), rope_rotations[i]);
+        ropeObj = glm::scale(ropeObj, rope_scaling[i]);
+
+        applyTexture(shader, ropeObj, swingRopeDiff, noSpec);
+    }
+
     // Seat transformations
-    rope1Obj = glm::translate(rope1Obj, glm::vec3(x, y + 3.0f, z));
-    rope1Obj = glm::rotate(rope1Obj, glm::radians(45.0f), glm::vec3(0.0, 1.0, 0.0));
-    rope1Obj = glm::scale(rope1Obj, glm::vec3(0.1f, 0.1f, 0.1f));
+    glm::vec3 seat_translations[] = {
+        glm::vec3(x + 0.375f, y + 0.5f, z - 0.375f),
+        glm::vec3(x - 0.375f, y + 0.5f, z + 0.375f)
+    };
+
+    glm::vec3 seat_rotations[] = {
+        glm::vec3(0.0, 1.0, 0.0),
+        glm::vec3(0.0, 1.0, 0.0)
+    };
+
+    glm::vec3 seat_scaling[] = {
+        glm::vec3(0.4, 0.025, 0.15),
+        glm::vec3(0.4, 0.025, 0.15)
+    };
+
+    for(int i = 0; i < 2; i++)
+    {
+        glm::mat4 seatObj = glm::mat4();
+
+        seatObj = glm::translate(seatObj, seat_translations[i]);
+        seatObj = glm::rotate(seatObj, glm::radians(45.0f), seat_rotations[i]);
+        seatObj = glm::scale(seatObj, seat_scaling[i]);
+
+        applyTexture(shader, seatObj, swingSeatDiff, mildSpec);
+    }
 
     applyTexture(shader, bf1Obj, swingFrameDiff, noSpec);
     applyTexture(shader, bf2Obj, swingFrameDiff, noSpec);
@@ -1247,5 +1297,4 @@ void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, uns
     applyTexture(shader, bf5Obj, swingFrameDiff, noSpec);
     applyTexture(shader, bf6Obj, swingFrameDiff, noSpec);
     applyTexture(shader, barFrameObj, swingFrameDiff, noSpec);
-    applyTexture(shader, rope1Obj, swingRopeDiff, noSpec);
 }
