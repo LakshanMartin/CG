@@ -125,6 +125,9 @@ int main()
     unsigned int gazeboFrameDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_frame.png").c_str());
     unsigned int gazeboRoofDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_roof.png").c_str());
     unsigned int pavingDiff = loadTexture(FileSystem::getPath("resources/textures/paving.png").c_str());
+    unsigned int woodSlatsDiff = loadTexture(FileSystem::getPath("resources/textures/bench.png").c_str());
+    unsigned int paintedMetalDiff = loadTexture(FileSystem::getPath("resources/textures/painted_metal.png").c_str());
+    
 
     // first, configure the cube's VAO (and VBO)
     unsigned int VBO, VAO;
@@ -256,7 +259,7 @@ int main()
         playFloorDraw(VAO, shader, playFloorDiff, noSpec);
         swingDraw(VAO, shader, swingFrameDiff, swingRopeDiff, swingSeatDiff, noSpec, mildSpec);
         gazeboDraw(VAO, shader, gazeboFrameDiff, gazeboRoofDiff, pavingDiff, highSpec, mildSpec, noSpec);
-        pavingDraw(-9.0f, 0.0f, -9.0f, VAO, shader, pavingDiff, noSpec);
+        tableBenchDraw(VAO, shader, woodSlatsDiff, paintedMetalDiff, noSpec, mildSpec);
 
         // DRAW TREE BARRIERS
         for(int i = -14; i <= 14; i++)
@@ -1412,35 +1415,99 @@ void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, u
 
     applyTexture(shader, roofObj, gazeboRoofDiff, mildSpec);
 
-    // Floor transformations
-
-    // for(int i = x; i < 1; i++)
-    // {
-    //     for(int j = z; j < 1; j++)
-    //     {
-    //         glm::mat4 floorObj = glm::mat4();
-            
-    //         floorObj = glm::translate(floorObj, glm::vec3(i - 4.5f, y, j - 2.0f));
-    //         floorObj = glm::scale(floorObj, glm::vec3(1.0f, 0.01f, 1.0f));
-
-    //         applyTexture(shader, floorObj, pavingDiff, noSpec);
-    //     }
-    // }
-
-}
-
-void pavingDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int pavingDiff, unsigned int noSpec)
-{
-    for(int i = x; i < 1; i++)
+    // Paving
+    for(int i = 0; i < 10; i++)
     {
-        for(int j = z; j < 1; j++)
+        for(int j = 0; j < 9; j++)
         {
             glm::mat4 floorObj = glm::mat4();
             
-            floorObj = glm::translate(floorObj, glm::vec3(i - 4.5f, y, j - 2.0f));
+            floorObj = glm::translate(floorObj, glm::vec3(x - 4.5f + i, y, z - 2.0f + j));
             floorObj = glm::scale(floorObj, glm::vec3(1.0f, 0.01f, 1.0f));
 
             applyTexture(shader, floorObj, pavingDiff, noSpec);
         }
+    }
+}
+
+void tableBenchDraw(unsigned int VAO, Shader shader, unsigned int woodSlatsDiff, unsigned int paintedMetalDiff, unsigned int noSpec, unsigned int mildSpec)
+{
+    float x = -10.0f;
+    float y = 0.25f;
+    float z = -6.5f;
+
+    glBindVertexArray(VAO);
+
+    // Legs transformations
+    glm::vec3 legs_translations[] = {
+        // Table legs
+        glm::vec3(x, y, z - 0.5f),
+        glm::vec3(x, y, z + 0.5f),
+        glm::vec3(x + 2.0f, y, z - 0.5f),
+        glm::vec3(x + 2.0f, y, z + 0.5f),
+        // Bench 1 legs
+        glm::vec3(x + 0.25f, y - 0.1f, z - 0.75f),
+        glm::vec3(x + 0.25f, y - 0.1f, z - 1.0f),
+        glm::vec3(x + 1.75f, y - 0.1f, z - 0.75f),
+        glm::vec3(x + 1.75f, y - 0.1f, z - 1.0f),
+        // Bench 2 legs
+        glm::vec3(x + 0.25f, y - 0.1f, z + 0.75f),
+        glm::vec3(x + 0.25f, y - 0.1f, z + 1.0f),
+        glm::vec3(x + 1.75f, y - 0.1f, z + 0.75f),
+        glm::vec3(x + 1.75f, y - 0.1f, z + 1.0f),
+    };
+
+    glm::vec3 legs_scaling[] = {
+        // Table legs
+        glm::vec3(0.1f, 0.75f, 0.1f),
+        glm::vec3(0.1f, 0.75f, 0.1f),
+        glm::vec3(0.1f, 0.75f, 0.1f),
+        glm::vec3(0.1f, 0.75f, 0.1f),
+        // Bench 1 legs
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        //Bench 2 legs
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        glm::vec3(0.1f, 0.3f, 0.1f),
+        glm::vec3(0.1f, 0.3f, 0.1f),
+    };
+
+    for(int i = 0; i < 12; i++)
+    {
+        glm::mat4 legsObj = glm::mat4();
+
+        legsObj = glm::translate(legsObj, legs_translations[i]);
+        legsObj = glm::scale(legsObj, legs_scaling[i]);
+
+        applyTexture(shader, legsObj, paintedMetalDiff, mildSpec);
+    }
+
+    // Top transformation
+    glm::vec3 top_translations[] = {
+        // Table
+        glm::vec3(x + 1.0f, y + 0.4f, z),
+        // Bench 1 
+        glm::vec3(x + 1.0f, y + 0.1f, z - 0.875f),
+        // Bench 2 
+        glm::vec3(x + 1.0f, y + 0.1f, z + 0.875f),
+    };
+
+    glm::vec3 top_scaling[] = {
+        glm::vec3(2.2f, 0.1f, 1.2f),
+        glm::vec3(1.6f, 0.1f, 0.4f),
+        glm::vec3(1.6f, 0.1f, 0.4f),
+    };
+
+    for(int i = 0; i < 3; i++)
+    {
+        glm::mat4 topObj = glm::mat4();
+
+        topObj = glm::translate(topObj, top_translations[i]);
+        topObj = glm::scale(topObj, top_scaling[i]);
+
+        applyTexture(shader, topObj, woodSlatsDiff, noSpec);
     }
 }
