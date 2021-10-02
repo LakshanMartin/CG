@@ -40,6 +40,7 @@ void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, 
 void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, unsigned int swingRopeDiff, unsigned int swingSeatDiff, unsigned int noSpec, unsigned int mildSpec);
 void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec);
 void tableBenchDraw(unsigned int VAO, Shader shader, unsigned int woodSlatsDiff, unsigned int paintedMetalDiff, unsigned int noSpec, unsigned int mildSpec);
+void bbqDraw(unsigned int VAO, Shader shader, unsigned int bbqBaseDiff, unsigned int metalFrameDiff, unsigned int bbqTopDiff, unsigned int bbqButtonDiff, unsigned int bbqGrillDiff, unsigned int bbqPanDiff, unsigned int pavingDiff, unsigned int noSpec, unsigned int mildSpec, unsigned int highSpec);
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
 // ------------------------------------------------------------------

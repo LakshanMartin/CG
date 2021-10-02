@@ -122,11 +122,16 @@ int main()
     unsigned int swingFrameDiff = loadTexture(FileSystem::getPath("resources/textures/log.png").c_str());
     unsigned int swingRopeDiff = loadTexture(FileSystem::getPath("resources/textures/rope.png").c_str());
     unsigned int swingSeatDiff = loadTexture(FileSystem::getPath("resources/textures/swing_seat.png").c_str());
-    unsigned int gazeboFrameDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_frame.png").c_str());
+    unsigned int metalFrameDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_frame.png").c_str());
     unsigned int gazeboRoofDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_roof.png").c_str());
     unsigned int pavingDiff = loadTexture(FileSystem::getPath("resources/textures/paving.png").c_str());
     unsigned int woodSlatsDiff = loadTexture(FileSystem::getPath("resources/textures/bench.png").c_str());
     unsigned int paintedMetalDiff = loadTexture(FileSystem::getPath("resources/textures/painted_metal.png").c_str());
+    unsigned int bbqBaseDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_base.png").c_str());
+    unsigned int bbqGrillDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_grill.png").c_str());
+    unsigned int bbqPanDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_pan.png").c_str());
+    unsigned int bbqTopDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_top.png").c_str());
+    unsigned int bbqButtonDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_button.png").c_str());
     
 
     // first, configure the cube's VAO (and VBO)
@@ -258,8 +263,9 @@ int main()
         birdDraw(2.9f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
         playFloorDraw(VAO, shader, playFloorDiff, noSpec);
         swingDraw(VAO, shader, swingFrameDiff, swingRopeDiff, swingSeatDiff, noSpec, mildSpec);
-        gazeboDraw(VAO, shader, gazeboFrameDiff, gazeboRoofDiff, pavingDiff, highSpec, mildSpec, noSpec);
+        gazeboDraw(VAO, shader, metalFrameDiff, gazeboRoofDiff, pavingDiff, highSpec, mildSpec, noSpec);
         tableBenchDraw(VAO, shader, woodSlatsDiff, paintedMetalDiff, noSpec, mildSpec);
+        bbqDraw(VAO, shader, bbqBaseDiff, metalFrameDiff, bbqTopDiff, bbqButtonDiff, bbqGrillDiff, bbqPanDiff, pavingDiff, noSpec, mildSpec, highSpec);
 
         // DRAW TREE BARRIERS
         for(int i = -14; i <= 14; i++)
@@ -1307,7 +1313,7 @@ void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, uns
     applyTexture(shader, barFrameObj, swingFrameDiff, noSpec);
 }
 
-void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec)
+void gazeboDraw(unsigned int VAO, Shader shader, unsigned int metalFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec)
 {
     float x = -9.0f;
     float y = 0.0f;
@@ -1337,7 +1343,7 @@ void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, u
         vFrameObj = glm::translate(vFrameObj, vFrame_translations[i]);
         vFrameObj = glm::scale(vFrameObj, vFrame_scaling[i]);
 
-        applyTexture(shader, vFrameObj, gazeboFrameDiff, highSpec);
+        applyTexture(shader, vFrameObj, metalFrameDiff, highSpec);
     }
 
     // Horizontal frame (z-axis) transformations
@@ -1376,7 +1382,7 @@ void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, u
         hZFrameObj = glm::rotate(hZFrameObj, glm::radians(5.0f), hZFrame_rotations[i]);
         hZFrameObj = glm::scale(hZFrameObj, hZFrame_scaling[i]);
     
-        applyTexture(shader, hZFrameObj, gazeboFrameDiff, highSpec);
+        applyTexture(shader, hZFrameObj, metalFrameDiff, highSpec);
     }
 
     // Horizontal frame (x-frame) transformations
@@ -1403,7 +1409,7 @@ void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, u
         hXFrameObj = glm::rotate(hXFrameObj, glm::radians(5.0f), hXFrame_rotations[i]);
         hXFrameObj = glm::scale(hXFrameObj, hXFrame_scaling[i]);
     
-        applyTexture(shader, hXFrameObj, gazeboFrameDiff, highSpec);
+        applyTexture(shader, hXFrameObj, metalFrameDiff, highSpec);
     }
 
     // Roof transformations
@@ -1509,5 +1515,113 @@ void tableBenchDraw(unsigned int VAO, Shader shader, unsigned int woodSlatsDiff,
         topObj = glm::scale(topObj, top_scaling[i]);
 
         applyTexture(shader, topObj, woodSlatsDiff, noSpec);
+    }
+}
+
+void bbqDraw(unsigned int VAO, Shader shader, unsigned int bbqBaseDiff, unsigned int metalFrameDiff, unsigned int bbqTopDiff, unsigned int bbqButtonDiff, unsigned int bbqGrillDiff, unsigned int bbqPanDiff, unsigned int pavingDiff, unsigned int noSpec, unsigned int mildSpec, unsigned int highSpec)
+{
+    float x = -7.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    glBindVertexArray(VAO);
+
+    // Base transformations
+    glm::mat4 baseObj = glm::mat4();
+
+    baseObj = glm::translate(baseObj, glm::vec3(x, y, z));
+    baseObj = glm::scale(baseObj, glm::vec3(0.7f, 1.25f, 1.5f));
+
+    applyTexture(shader, baseObj, bbqBaseDiff, noSpec);
+
+    // Front panel plate
+    glm::mat4 panelObj = glm::mat4();
+
+    panelObj = glm::translate(panelObj, glm::vec3(x - 0.35f, y + 0.3f, z));
+    panelObj = glm::scale(panelObj, glm::vec3(0.02f, 0.4f, 0.35f));
+
+    applyTexture(shader, panelObj, metalFrameDiff, highSpec);
+
+    // Front panel button
+    glm::mat4 buttonObj = glm::mat4();
+
+    buttonObj = glm::translate(buttonObj, glm::vec3(x - 0.35f, y + 0.35f, z + 0.1f));
+    buttonObj = glm::scale(buttonObj, glm::vec3(0.05f, 0.05f, 0.05f));
+
+    applyTexture(shader, buttonObj, bbqButtonDiff, mildSpec);
+
+    // Bench top transformation
+    glm::mat4 topObj = glm::mat4();
+
+    topObj = glm::translate(topObj, glm::vec3(x, y + 0.65f, z));
+    topObj = glm::scale(topObj, glm::vec3(0.75f, 0.1f, 1.6f));
+
+    applyTexture(shader, topObj, bbqTopDiff, highSpec);
+
+    // Metal grill/plate frame transformations
+    glm::vec3 frame_translations[] = {
+        // plate
+        glm::vec3(x - 0.30f, y + 0.7f, z - 0.1f),
+        glm::vec3(x + 0.30f, y + 0.7f, z - 0.1f),
+        glm::vec3(x, y + 0.7f, z - 0.3f),
+        glm::vec3(x, y + 0.7f, z + 0.1f),
+        // grill
+        glm::vec3(x - 0.30f, y + 0.7f, z + 0.4f),
+        glm::vec3(x + 0.3f, y + 0.7f, z + 0.4f),
+        glm::vec3(x, y + 0.7f, z + 0.2f),
+        glm::vec3(x, y + 0.7f, z + 0.6f),
+    };
+
+    glm::vec3 frame_scaling[] = {
+        // plate
+        glm::vec3(0.02f, 0.025f, 0.4f),
+        glm::vec3(0.02f, 0.025f, 0.4f),
+        glm::vec3(0.62f, 0.025f, 0.02f),
+        glm::vec3(0.62f, 0.025f, 0.02f),
+        // grill
+        glm::vec3(0.02f, 0.025f, 0.4f),
+        glm::vec3(0.02f, 0.025f, 0.4f),
+        glm::vec3(0.62f, 0.025f, 0.02f),
+        glm::vec3(0.62f, 0.025f, 0.02f),
+    };
+
+    for(int i = 0; i < 8; i++)
+    {
+        glm::mat4 frameObj = glm::mat4();
+
+        frameObj = glm::translate(frameObj, frame_translations[i]);
+        frameObj = glm::scale(frameObj, frame_scaling[i]);
+        
+        applyTexture(shader, frameObj, metalFrameDiff, highSpec);
+    }
+
+    // Plate transformations
+    glm::mat4 plateObj = glm::mat4();
+
+    plateObj = glm::translate(plateObj, glm::vec3(x, y + 0.7f, z - 0.1f));
+    plateObj = glm::scale(plateObj, glm::vec3(0.60f, 0.01f, 0.4f));
+
+    applyTexture(shader, plateObj, bbqPanDiff, mildSpec);
+
+    // Grill transformations
+    glm::mat4 grillObj = glm::mat4();
+
+    grillObj = glm::translate(grillObj, glm::vec3(x, y + 0.70f, z + 0.4f));
+    grillObj = glm::scale(grillObj, glm::vec3(0.60f, 0.01f, 0.4f));
+
+    applyTexture(shader, grillObj, bbqGrillDiff, noSpec);
+
+    // Paving
+    for(int i = 0; i < 6; i++)
+    {
+        for(int j = 0; j < 5; j++)
+        {
+            glm::mat4 floorObj = glm::mat4();
+            
+            floorObj = glm::translate(floorObj, glm::vec3(x - 4.0f + i, y, z - 2.0f + j));
+            floorObj = glm::scale(floorObj, glm::vec3(1.0f, 0.01f, 1.0f));
+
+            applyTexture(shader, floorObj, pavingDiff, noSpec);
+        }
     }
 }
