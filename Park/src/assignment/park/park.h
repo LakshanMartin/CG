@@ -38,6 +38,8 @@ void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
 void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int birdDiff,unsigned int noSpec);
 void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, unsigned int noSpec);
 void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, unsigned int swingRopeDiff, unsigned int swingSeatDiff, unsigned int noSpec, unsigned int mildSpec);
+void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec);
+void pavingDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int pavingDiff, unsigned int noSpec);
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
 // ------------------------------------------------------------------

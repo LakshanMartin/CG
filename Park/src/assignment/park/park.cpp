@@ -122,6 +122,9 @@ int main()
     unsigned int swingFrameDiff = loadTexture(FileSystem::getPath("resources/textures/log.png").c_str());
     unsigned int swingRopeDiff = loadTexture(FileSystem::getPath("resources/textures/rope.png").c_str());
     unsigned int swingSeatDiff = loadTexture(FileSystem::getPath("resources/textures/swing_seat.png").c_str());
+    unsigned int gazeboFrameDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_frame.png").c_str());
+    unsigned int gazeboRoofDiff = loadTexture(FileSystem::getPath("resources/textures/gazebo_roof.png").c_str());
+    unsigned int pavingDiff = loadTexture(FileSystem::getPath("resources/textures/paving.png").c_str());
 
     // first, configure the cube's VAO (and VBO)
     unsigned int VBO, VAO;
@@ -252,14 +255,16 @@ int main()
         birdDraw(2.9f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
         playFloorDraw(VAO, shader, playFloorDiff, noSpec);
         swingDraw(VAO, shader, swingFrameDiff, swingRopeDiff, swingSeatDiff, noSpec, mildSpec);
+        gazeboDraw(VAO, shader, gazeboFrameDiff, gazeboRoofDiff, pavingDiff, highSpec, mildSpec, noSpec);
+        pavingDraw(-9.0f, 0.0f, -9.0f, VAO, shader, pavingDiff, noSpec);
 
         // DRAW TREE BARRIERS
-        for(int i = -12; i <= 12; i++)
+        for(int i = -14; i <= 14; i++)
         {
-            treeDraw(i, 2.5f, 12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(-12.0f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(i, 2.5f, -12.0f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(12.0f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 2.5f, 14.5f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(-14.5f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 2.5f, -14.5f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(14.5f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -543,7 +548,7 @@ void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned
 		glm::mat4 grassObj = glm::mat4();
 
 		grassObj = glm::translate(grassObj, glm::vec3(0.0f, -0.51f, 0.0f));
-		grassObj = glm::scale(grassObj, glm::vec3(25.0f, 1.0f, 25.0f));
+		grassObj = glm::scale(grassObj, glm::vec3(30.0f, 1.0f, 30.0f));
 
         applyTexture(shader, grassObj, grassDiff, mildSpec);
 }
@@ -1297,4 +1302,145 @@ void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, uns
     applyTexture(shader, bf5Obj, swingFrameDiff, noSpec);
     applyTexture(shader, bf6Obj, swingFrameDiff, noSpec);
     applyTexture(shader, barFrameObj, swingFrameDiff, noSpec);
+}
+
+void gazeboDraw(unsigned int VAO, Shader shader, unsigned int gazeboFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec)
+{
+    float x = -9.0f;
+    float y = 0.0f;
+    float z = -9.0f;
+
+    glBindVertexArray(VAO);
+
+    // Vertical frame transformations
+    glm::vec3 vFrame_translations[] = {
+        glm::vec3(x - 2.5f, y + 1.5f, z),
+        glm::vec3(x - 2.5f, y + 1.5f, z + 5.0f),
+        glm::vec3(x + 2.5f, y + 1.5f, z),
+        glm::vec3(x + 2.5f, y + 1.5f, z + 5.0f),
+    };
+
+    glm::vec3 vFrame_scaling[] = {
+        glm::vec3(0.2f, 3.0f, 0.2f),
+        glm::vec3(0.2f, 3.0f, 0.2f),
+        glm::vec3(0.2f, 4.0f, 0.2f),
+        glm::vec3(0.2f, 4.0f, 0.2f),
+    };
+
+    for(int i = 0; i < 4; i++)
+    {
+        glm::mat4 vFrameObj = glm::mat4();
+
+        vFrameObj = glm::translate(vFrameObj, vFrame_translations[i]);
+        vFrameObj = glm::scale(vFrameObj, vFrame_scaling[i]);
+
+        applyTexture(shader, vFrameObj, gazeboFrameDiff, highSpec);
+    }
+
+    // Horizontal frame (z-axis) transformations
+    glm::vec3 hZFrame_translations[] = {
+        glm::vec3(x - 2.5f, y + 3.0f, z + 2.5f),
+        glm::vec3(x - 1.5f, y + 3.1f, z + 2.5f),
+        glm::vec3(x - 0.5f, y + 3.2f, z + 2.5f),
+        glm::vec3(x + 0.5f, y + 3.3f, z + 2.5f),
+        glm::vec3(x + 1.5f, y + 3.4f, z + 2.5f),
+        glm::vec3(x + 2.5f, y + 3.5f, z + 2.5f),
+    };
+
+    glm::vec3 hZFrame_rotations[] = {
+        glm::vec3(0.0, 0.0, 1.0),
+        glm::vec3(0.0, 0.0, 1.0),
+        glm::vec3(0.0, 0.0, 1.0),
+        glm::vec3(0.0, 0.0, 1.0),
+        glm::vec3(0.0, 0.0, 1.0),
+        glm::vec3(0.0, 0.0, 1.0),
+    };
+
+    glm::vec3 hZFrame_scaling[] = {
+        glm::vec3(0.2f, 0.2f, 6.0f),
+        glm::vec3(0.2f, 0.2f, 6.0f),
+        glm::vec3(0.2f, 0.2f, 6.0f),
+        glm::vec3(0.2f, 0.2f, 6.0f),
+        glm::vec3(0.2f, 0.2f, 6.0f),
+        glm::vec3(0.2f, 0.2f, 6.0f),
+    };
+
+    for(int i = 0; i < 6; i++)
+    {
+        glm::mat4 hZFrameObj = glm::mat4();
+
+        hZFrameObj = glm::translate(hZFrameObj, hZFrame_translations[i]);
+        hZFrameObj = glm::rotate(hZFrameObj, glm::radians(5.0f), hZFrame_rotations[i]);
+        hZFrameObj = glm::scale(hZFrameObj, hZFrame_scaling[i]);
+    
+        applyTexture(shader, hZFrameObj, gazeboFrameDiff, highSpec);
+    }
+
+    // Horizontal frame (x-frame) transformations
+    glm::vec3 hXFrame_translations[] = {
+        glm::vec3(x, y + 3.25f, z),
+        glm::vec3(x, y + 3.25f, z + 5.0f),
+    };
+
+    glm::vec3 hXFrame_rotations[] = {
+        glm::vec3(0.0, 0.0, 1.0),
+        glm::vec3(0.0, 0.0, 1.0),
+    };
+
+    glm::vec3 hXFrame_scaling[] = {
+        glm::vec3(6.0f, 0.2f, 0.2f),
+        glm::vec3(6.0f, 0.2f, 0.2f),
+    };
+
+    for(int i = 0; i < 2; i++)
+    {
+        glm::mat4 hXFrameObj = glm::mat4();
+
+        hXFrameObj = glm::translate(hXFrameObj, hXFrame_translations[i]);
+        hXFrameObj = glm::rotate(hXFrameObj, glm::radians(5.0f), hXFrame_rotations[i]);
+        hXFrameObj = glm::scale(hXFrameObj, hXFrame_scaling[i]);
+    
+        applyTexture(shader, hXFrameObj, gazeboFrameDiff, highSpec);
+    }
+
+    // Roof transformations
+    glm::mat4 roofObj = glm::mat4();
+
+    roofObj = glm::translate(roofObj, glm::vec3(x, y + 3.425f, z + 2.5f));
+    roofObj = glm::rotate(roofObj, glm::radians(5.0f), glm::vec3(0.0, 0.0, 1.0));
+    roofObj = glm::scale(roofObj, glm::vec3(7.0f, 0.1f, 6.5f));
+
+    applyTexture(shader, roofObj, gazeboRoofDiff, mildSpec);
+
+    // Floor transformations
+
+    // for(int i = x; i < 1; i++)
+    // {
+    //     for(int j = z; j < 1; j++)
+    //     {
+    //         glm::mat4 floorObj = glm::mat4();
+            
+    //         floorObj = glm::translate(floorObj, glm::vec3(i - 4.5f, y, j - 2.0f));
+    //         floorObj = glm::scale(floorObj, glm::vec3(1.0f, 0.01f, 1.0f));
+
+    //         applyTexture(shader, floorObj, pavingDiff, noSpec);
+    //     }
+    // }
+
+}
+
+void pavingDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int pavingDiff, unsigned int noSpec)
+{
+    for(int i = x; i < 1; i++)
+    {
+        for(int j = z; j < 1; j++)
+        {
+            glm::mat4 floorObj = glm::mat4();
+            
+            floorObj = glm::translate(floorObj, glm::vec3(i - 4.5f, y, j - 2.0f));
+            floorObj = glm::scale(floorObj, glm::vec3(1.0f, 0.01f, 1.0f));
+
+            applyTexture(shader, floorObj, pavingDiff, noSpec);
+        }
+    }
 }
