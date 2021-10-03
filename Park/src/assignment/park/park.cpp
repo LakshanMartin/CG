@@ -136,6 +136,8 @@ int main()
     unsigned int binPanelDiff = loadTexture(FileSystem::getPath("resources/textures/bin_panel.png").c_str());
     unsigned int binGenSignDiff = loadTexture(FileSystem::getPath("resources/textures/bin_sign1.png").c_str());
     unsigned int binRecSignDiff = loadTexture(FileSystem::getPath("resources/textures/bin_sign2.png").c_str());
+    unsigned int fountainBaseDiff = loadTexture(FileSystem::getPath("resources/textures/fountain_base.png").c_str());
+    unsigned int fountainTapDiff = loadTexture(FileSystem::getPath("resources/textures/fountain_tap.png").c_str());
     
 
     // first, configure the cube's VAO (and VBO)
@@ -272,6 +274,7 @@ int main()
         bbqDraw(shader, bbqBaseDiff, bbqPanelDiff, metalFrameDiff, bbqTopDiff, bbqGrillDiff, bbqPanDiff, pavingDiff, noSpec, mildSpec, highSpec);
         binDraw(-12.0f, 0.0f, 0.5f, shader, binMetalDiff, binPanelDiff, binGenSignDiff, mildSpec, noSpec);
         binDraw(-12.0f, 0.0f, -0.5f, shader, binMetalDiff, binPanelDiff, binRecSignDiff, mildSpec, noSpec);
+        fountainDraw(-3.0f, 0.36f, -9.0f, shader, fountainBaseDiff, fountainTapDiff, noSpec, highSpec);
 
         // DRAW TREE BARRIERS
         for(int i = -14; i <= 14; i++)
@@ -1656,4 +1659,74 @@ void binDraw(float x, float y, float z, Shader shader, unsigned int binMetalDiff
     signObj = glm::scale(signObj, glm::vec3(0.01f, 0.40f, 0.25f));
 
     applyTexture(shader, signObj, binSignDiff, mildSpec);
+}
+
+void fountainDraw(float x, float y, float z, Shader shader, unsigned int fountainBaseDiff, unsigned int fountainTapDiff, unsigned int noSpec, unsigned int highSpec)
+{
+    // Main base
+    glm::mat4 mainBaseObj = glm::mat4();
+
+    mainBaseObj = glm::translate(mainBaseObj, glm::vec3(x, y, z));
+    mainBaseObj = glm::scale(mainBaseObj, glm::vec3(0.2f, 0.75f, 0.2f));
+
+    applyTexture(shader, mainBaseObj, fountainBaseDiff, noSpec);
+
+    // Tap bases
+    glm::vec3 tapBase_translations[] = {
+        glm::vec3(x + 0.22f, y + 0.3f, z), // Upper tap
+        glm::vec3(x - 0.22f, y + 0.15f, z), // Lower tap
+    };
+
+    float radians[] = {
+        5.0f, // Upper tap 
+        -5.0f // Lower tap
+    };
+
+    glm::vec3 tapBase_rotations[] = {
+        glm::vec3(0.0, 0.0, 1.0), // Upper tap
+        glm::vec3(0.0, 0.0, 1.0), // Lower tap
+    };
+
+    glm::vec3 tapBase_scalings[] = {
+        glm::vec3(0.25f, 0.1f, 0.1f), // Upper tap
+        glm::vec3(0.25f, 0.1f, 0.1f), // Lower tap
+    };
+
+    for(int i = 0; i < 2; i++)
+    {
+        glm::mat4 tapBase = glm::mat4();
+
+        tapBase = glm::translate(tapBase, tapBase_translations[i]);
+        tapBase = glm::rotate(tapBase, glm::radians(radians[i]), tapBase_rotations[i]);
+        tapBase = glm::scale(tapBase, tapBase_scalings[i]);
+
+        applyTexture(shader, tapBase, fountainBaseDiff, noSpec);
+    }
+
+    // Fixtures
+    glm::vec3 fixture_translations[] = {
+        // Upper
+        glm::vec3(x + 0.32f, y + 0.38f, z),
+        glm::vec3(x + 0.34f, y + 0.41f, z),
+        // Lower
+        glm::vec3(x - 0.32f, y + 0.23f, z),
+        glm::vec3(x - 0.34f, y + 0.26f, z),
+    };
+
+    glm::vec3 fixture_scalings[] = {
+        glm::vec3(0.03f, 0.05f, 0.03f),
+        glm::vec3(0.07f, 0.01f, 0.05f),
+        glm::vec3(0.03f, 0.05f, 0.03f),
+        glm::vec3(0.07f, 0.01f, 0.05f),
+    };
+
+    for(int i = 0; i < 4; i++)
+    {
+        glm::mat4 fixtureObj = glm::mat4();
+
+        fixtureObj = glm::translate(fixtureObj, fixture_translations[i]);
+        fixtureObj = glm::scale(fixtureObj, fixture_scalings[i]);
+
+        applyTexture(shader, fixtureObj, fountainTapDiff, highSpec);
+    }
 }
