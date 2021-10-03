@@ -131,7 +131,11 @@ int main()
     unsigned int bbqGrillDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_grill.png").c_str());
     unsigned int bbqPanDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_pan.png").c_str());
     unsigned int bbqTopDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_top.png").c_str());
-    unsigned int bbqButtonDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_button.png").c_str());
+    unsigned int bbqPanelDiff = loadTexture(FileSystem::getPath("resources/textures/bbq_panel.png").c_str());
+    unsigned int binMetalDiff = loadTexture(FileSystem::getPath("resources/textures/bin_metal.png").c_str());
+    unsigned int binPanelDiff = loadTexture(FileSystem::getPath("resources/textures/bin_panel.png").c_str());
+    unsigned int binGenSignDiff = loadTexture(FileSystem::getPath("resources/textures/bin_sign1.png").c_str());
+    unsigned int binRecSignDiff = loadTexture(FileSystem::getPath("resources/textures/bin_sign2.png").c_str());
     
 
     // first, configure the cube's VAO (and VBO)
@@ -250,30 +254,32 @@ int main()
         shader.setMat4("model", model);
 
         // DRAW SKY BOX
-        skyDraw(VAO, shader, skyDiff, noSpec);
+        skyDraw(shader, skyDiff, noSpec);
 
         // DRAW OBJECTS ---------------------------------------------------------
-        grassDraw(VAO, shader, grassDiff, mildSpec);
-        bballCourtDraw(VAO, shader, bballCourtDiff, noSpec);
-        bballRingDraw(false, 0.0f, 1.0f, -5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        bballRingDraw(true, 0.0f, 1.0f, 5.5f, VAO, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        manDraw(-0.12f, 0.0f, -1.5f, VAO, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
-        bballDraw(0.0f, 0.3f, -1.5f, VAO, shader, bballDiff, mildSpec);
-        dogDraw(3.0f, 0.2f, -3.0f, VAO, shader, dogHeadDiff, dogBodyDiff, noSpec);
-        birdDraw(2.9f, 1.0f, -3.0f, VAO, shader, birdDiff, noSpec);
-        playFloorDraw(VAO, shader, playFloorDiff, noSpec);
-        swingDraw(VAO, shader, swingFrameDiff, swingRopeDiff, swingSeatDiff, noSpec, mildSpec);
-        gazeboDraw(VAO, shader, metalFrameDiff, gazeboRoofDiff, pavingDiff, highSpec, mildSpec, noSpec);
-        tableBenchDraw(VAO, shader, woodSlatsDiff, paintedMetalDiff, noSpec, mildSpec);
-        bbqDraw(VAO, shader, bbqBaseDiff, metalFrameDiff, bbqTopDiff, bbqButtonDiff, bbqGrillDiff, bbqPanDiff, pavingDiff, noSpec, mildSpec, highSpec);
+        grassDraw(shader, grassDiff, mildSpec);
+        bballCourtDraw(shader, bballCourtDiff, noSpec);
+        bballRingDraw(false, 0.0f, 1.0f, -5.5f, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
+        bballRingDraw(true, 0.0f, 1.0f, 5.5f,  shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
+        manDraw(-0.12f, 0.0f, -1.5f, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
+        bballDraw(0.0f, 0.3f, -1.5f, shader, bballDiff, mildSpec);
+        dogDraw(3.0f, 0.2f, -3.0f, shader, dogHeadDiff, dogBodyDiff, noSpec);
+        birdDraw(2.9f, 1.0f, -3.0f, shader, birdDiff, noSpec);
+        playFloorDraw(shader, playFloorDiff, noSpec);
+        swingDraw(shader, swingFrameDiff, swingRopeDiff, swingSeatDiff, noSpec, mildSpec);
+        gazeboDraw(shader, metalFrameDiff, gazeboRoofDiff, pavingDiff, highSpec, mildSpec, noSpec);
+        tableBenchDraw(shader, woodSlatsDiff, paintedMetalDiff, noSpec, mildSpec);
+        bbqDraw(shader, bbqBaseDiff, bbqPanelDiff, metalFrameDiff, bbqTopDiff, bbqGrillDiff, bbqPanDiff, pavingDiff, noSpec, mildSpec, highSpec);
+        binDraw(-12.0f, 0.0f, 0.5f, shader, binMetalDiff, binPanelDiff, binGenSignDiff, mildSpec, noSpec);
+        binDraw(-12.0f, 0.0f, -0.5f, shader, binMetalDiff, binPanelDiff, binRecSignDiff, mildSpec, noSpec);
 
         // DRAW TREE BARRIERS
         for(int i = -14; i <= 14; i++)
         {
-            treeDraw(i, 2.5f, 14.5f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(-14.5f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(i, 2.5f, -14.5f, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
-            treeDraw(14.5f, 2.5f, i, VAO, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 2.5f, 14.5f, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(-14.5f, 2.5f, i, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(i, 2.5f, -14.5f, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
+            treeDraw(14.5f, 2.5f, i, shader, treeTopDiff, mildSpec, treeTrunkDiff, noSpec);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -539,10 +545,8 @@ void update_delay()
     }
 }
 
-void skyDraw(unsigned int VAO, Shader shader, unsigned int skyDiff, unsigned int noSpec)
+void skyDraw(Shader shader, unsigned int skyDiff, unsigned int noSpec)
 {
-    glBindVertexArray(VAO);
-
     glm::mat4 skyObj = glm::mat4();
     
     skyObj = glm::scale(skyObj, glm::vec3(50.0f, 50.0f, 50.0f));
@@ -550,10 +554,8 @@ void skyDraw(unsigned int VAO, Shader shader, unsigned int skyDiff, unsigned int
     applyTexture(shader, skyObj, skyDiff, noSpec);
 }
 
-void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned int mildSpec)
+void grassDraw(Shader shader, unsigned int grassDiff, unsigned int mildSpec)
 {
-        glBindVertexArray(VAO);
-
 		glm::mat4 grassObj = glm::mat4();
 
 		grassObj = glm::translate(grassObj, glm::vec3(0.0f, -0.51f, 0.0f));
@@ -562,20 +564,16 @@ void grassDraw(unsigned int VAO, Shader shader, unsigned int grassDiff, unsigned
         applyTexture(shader, grassObj, grassDiff, mildSpec);
 }
 
-void bballCourtDraw(unsigned int VAO, Shader shader, unsigned int courtDiff, unsigned int noSpec)
+void bballCourtDraw(Shader shader, unsigned int courtDiff, unsigned int noSpec)
 {
-    glBindVertexArray(VAO);
-
     glm::mat4 courtObj = glm::mat4();
     courtObj = glm::scale(courtObj, glm::vec3(5.0f, 0.0f, 10.0f));
 
     applyTexture(shader, courtObj, courtDiff, noSpec);
 }
 
-void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int treeTopDiff, unsigned int mildSpec, unsigned int treeTrunkDiff, unsigned int noSpec)
+void treeDraw(float x, float y, float z, Shader shader, unsigned int treeTopDiff, unsigned int mildSpec, unsigned int treeTrunkDiff, unsigned int noSpec)
 {
-    glBindVertexArray(VAO);
-
     // Tree trunk
     glm::mat4 trunkObj = glm::mat4();;
 
@@ -608,10 +606,8 @@ void treeDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     }
 }
 
-void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballBoardBackDiff, unsigned int bballBoardEdgeDiff, unsigned int bballRingDiff, unsigned int highSpec, unsigned int mildSpec)
-{
-    glBindVertexArray(VAO);
-    
+void bballRingDraw(bool isSecond, float x, float y, float z, Shader shader, unsigned int bballPoleDiff, unsigned int bballBoardFrontDiff, unsigned int bballBoardBackDiff, unsigned int bballBoardEdgeDiff, unsigned int bballRingDiff, unsigned int highSpec, unsigned int mildSpec)
+{    
     // Base Pole ----------------------------------------------------------------
     glm::mat4 basePoleObj = glm::mat4();
     basePoleObj = glm::translate(basePoleObj, glm::vec3(x, y, z));
@@ -812,10 +808,8 @@ void bballRingDraw(bool isSecond, float x, float y, float z, unsigned int VAO, S
     applyTexture(shader, ringRightObj, bballRingDiff, highSpec);
 }
 
-void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manFace2Diff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
+void manDraw(float x, float y, float z, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manFace2Diff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
 {
-    glBindVertexArray(VAO);
-
     glm::mat4 leftShoeObj = glm::mat4();
     glm::mat4 rightShoeObj = glm::mat4();
     glm::mat4 leftLegObj = glm::mat4();
@@ -1014,10 +1008,9 @@ void manDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     applyTexture(shader, rightHeadObj, manHeadRightDiff, noSpec);
 }
 
-void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int bballDiff, unsigned int mildSpec)
+void bballDraw(float x, float y, float z, Shader shader, unsigned int bballDiff, unsigned int mildSpec)
 {
     float scaleAmount;
-    glBindVertexArray(VAO);
 
     glm::mat4 bballObj = glm::mat4();
 
@@ -1051,13 +1044,11 @@ void bballDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsig
     applyTexture(shader, bballObj, bballDiff, mildSpec);
 }
 
-void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int dogHeadDiff, unsigned int dogBodyDiff, unsigned int noSpec)
+void dogDraw(float x, float y, float z, Shader shader, unsigned int dogHeadDiff, unsigned int dogBodyDiff, unsigned int noSpec)
 {
     float headScaleZ;
     float bodyScaleZ;
     float legScaleZ;
-
-    glBindVertexArray(VAO);
 
     glm::mat4 dogHeadObj = glm::mat4();
     glm::mat4 dogBodyObj = glm::mat4();
@@ -1123,11 +1114,9 @@ void dogDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigne
     // applyTexture(shader, dogLegs2Obj, dogHeadDiff, noSpec);
 }
 
-void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsigned int birdDiff,unsigned int noSpec)
+void birdDraw(float x, float y, float z, Shader shader, unsigned int birdDiff,unsigned int noSpec)
 {
     float scaleX, scaleY, scaleZ;
-
-    glBindVertexArray(VAO);
 
     glm::mat4 birdObj = glm::mat4();
 
@@ -1168,13 +1157,11 @@ void birdDraw(float x, float y, float z, unsigned int VAO, Shader shader, unsign
     applyTexture(shader, birdObj, birdDiff, noSpec);
 }
 
-void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, unsigned int noSpec)
+void playFloorDraw(Shader shader, unsigned int playFloorDiff, unsigned int noSpec)
 {
     float x = 7.0f;
     float y = -0.05f;
     float z = 7.0f;
-
-    glBindVertexArray(VAO);
 
     glm::mat4 floorObj = glm::mat4();
 
@@ -1184,13 +1171,11 @@ void playFloorDraw(unsigned int VAO, Shader shader, unsigned int playFloorDiff, 
     applyTexture(shader, floorObj, playFloorDiff, noSpec);
 }
 
-void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, unsigned int swingRopeDiff, unsigned int swingSeatDiff, unsigned int noSpec, unsigned int mildSpec)
+void swingDraw(Shader shader, unsigned int swingFrameDiff, unsigned int swingRopeDiff, unsigned int swingSeatDiff, unsigned int noSpec, unsigned int mildSpec)
 {
     float x = 7.0f;
     float y = -0.05f;
     float z = 7.0f;
-
-    glBindVertexArray(VAO);
 
     // Base frame objects
     glm::mat4 bf1Obj = glm::mat4();
@@ -1313,13 +1298,11 @@ void swingDraw(unsigned int VAO, Shader shader, unsigned int swingFrameDiff, uns
     applyTexture(shader, barFrameObj, swingFrameDiff, noSpec);
 }
 
-void gazeboDraw(unsigned int VAO, Shader shader, unsigned int metalFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec)
+void gazeboDraw(Shader shader, unsigned int metalFrameDiff, unsigned int gazeboRoofDiff, unsigned int pavingDiff, unsigned int highSpec, unsigned int mildSpec, unsigned int noSpec)
 {
     float x = -9.0f;
     float y = 0.0f;
     float z = -9.0f;
-
-    glBindVertexArray(VAO);
 
     // Vertical frame transformations
     glm::vec3 vFrame_translations[] = {
@@ -1436,13 +1419,11 @@ void gazeboDraw(unsigned int VAO, Shader shader, unsigned int metalFrameDiff, un
     }
 }
 
-void tableBenchDraw(unsigned int VAO, Shader shader, unsigned int woodSlatsDiff, unsigned int paintedMetalDiff, unsigned int noSpec, unsigned int mildSpec)
+void tableBenchDraw(Shader shader, unsigned int woodSlatsDiff, unsigned int paintedMetalDiff, unsigned int noSpec, unsigned int mildSpec)
 {
     float x = -10.0f;
     float y = 0.25f;
     float z = -6.5f;
-
-    glBindVertexArray(VAO);
 
     // Legs transformations
     glm::vec3 legs_translations[] = {
@@ -1518,13 +1499,11 @@ void tableBenchDraw(unsigned int VAO, Shader shader, unsigned int woodSlatsDiff,
     }
 }
 
-void bbqDraw(unsigned int VAO, Shader shader, unsigned int bbqBaseDiff, unsigned int metalFrameDiff, unsigned int bbqTopDiff, unsigned int bbqButtonDiff, unsigned int bbqGrillDiff, unsigned int bbqPanDiff, unsigned int pavingDiff, unsigned int noSpec, unsigned int mildSpec, unsigned int highSpec)
+void bbqDraw(Shader shader, unsigned int bbqBaseDiff, unsigned int bbqPanelDiff,unsigned int metalFrameDiff, unsigned int bbqTopDiff, unsigned int bbqGrillDiff, unsigned int bbqPanDiff, unsigned int pavingDiff, unsigned int noSpec, unsigned int mildSpec, unsigned int highSpec)
 {
     float x = -7.0f;
     float y = 0.0f;
     float z = 0.0f;
-
-    glBindVertexArray(VAO);
 
     // Base transformations
     glm::mat4 baseObj = glm::mat4();
@@ -1540,15 +1519,7 @@ void bbqDraw(unsigned int VAO, Shader shader, unsigned int bbqBaseDiff, unsigned
     panelObj = glm::translate(panelObj, glm::vec3(x - 0.35f, y + 0.3f, z));
     panelObj = glm::scale(panelObj, glm::vec3(0.02f, 0.4f, 0.35f));
 
-    applyTexture(shader, panelObj, metalFrameDiff, highSpec);
-
-    // Front panel button
-    glm::mat4 buttonObj = glm::mat4();
-
-    buttonObj = glm::translate(buttonObj, glm::vec3(x - 0.35f, y + 0.35f, z + 0.1f));
-    buttonObj = glm::scale(buttonObj, glm::vec3(0.05f, 0.05f, 0.05f));
-
-    applyTexture(shader, buttonObj, bbqButtonDiff, mildSpec);
+    applyTexture(shader, panelObj, bbqPanelDiff, highSpec);
 
     // Bench top transformation
     glm::mat4 topObj = glm::mat4();
@@ -1624,4 +1595,65 @@ void bbqDraw(unsigned int VAO, Shader shader, unsigned int bbqBaseDiff, unsigned
             applyTexture(shader, floorObj, pavingDiff, noSpec);
         }
     }
+}
+
+void binDraw(float x, float y, float z, Shader shader, unsigned int binMetalDiff, unsigned int binPanelDiff, unsigned int binSignDiff, unsigned int mildSpec, unsigned int noSpec)
+{
+    // Black bin frame
+    glm::vec3 frame_translations[] = {
+        glm::vec3(x, y, z), // Base pole
+        glm::vec3(x, y + 0.12f, z), // Base plate
+    };
+
+    glm::vec3 frame_scalings[] = {
+        glm::vec3(0.1f, 0.25f, 0.1f), // Base pole
+        glm::vec3(0.7f, 0.025f, 0.7f), // Base plate
+    };
+
+    for(int i = 0; i < 2; i++)
+    {
+        glm::mat4 frameObj = glm::mat4();
+
+        frameObj = glm::translate(frameObj, frame_translations[i]);
+        frameObj = glm::scale(frameObj, frame_scalings[i]);
+
+        applyTexture(shader, frameObj, binMetalDiff, mildSpec);
+    }
+
+    // Wood panels
+    glm::vec3 panel_translations[] = {
+        glm::vec3(x, y + 0.155f, z), // Bottom
+        glm::vec3(x, y + 0.63f, z + 0.375f), // Left
+        glm::vec3(x, y + 0.63f, z - 0.375f), // Right
+        glm::vec3(x - 0.375f, y + 0.63f, z), // Back
+        glm::vec3(x + 0.375f, y + 0.48f, z), // Front
+        glm::vec3(x, y + 1.155f, z), // Top
+    };
+
+    glm::vec3 panel_scalings[] = {
+        glm::vec3(0.7f, 0.05f, 0.7f), // Bottom
+        glm::vec3(0.7f, 1.0f, 0.05f), // Left
+        glm::vec3(0.7f, 1.0f, 0.05f), // Right
+        glm::vec3(0.05f, 1.0f, 0.8f), // Back
+        glm::vec3(0.05f, 0.7f, 0.8f), // Front
+        glm::vec3(0.8f, 0.05f, 0.8f), // Top
+    };
+
+    for(int i = 0; i < 6; i++)
+    {
+        glm::mat4 panelObj = glm::mat4();
+
+        panelObj = glm::translate(panelObj, panel_translations[i]);
+        panelObj = glm::scale(panelObj, panel_scalings[i]);
+
+        applyTexture(shader, panelObj, binPanelDiff, noSpec);
+    }
+
+    // Sign
+    glm::mat4 signObj = glm::mat4();
+
+    signObj = glm::translate(signObj, glm::vec3(x + 0.4f, y + 0.48f, z));
+    signObj = glm::scale(signObj, glm::vec3(0.01f, 0.40f, 0.25f));
+
+    applyTexture(shader, signObj, binSignDiff, mildSpec);
 }
