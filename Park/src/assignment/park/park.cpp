@@ -274,7 +274,12 @@ int main()
         bbqDraw(shader, bbqBaseDiff, bbqPanelDiff, metalFrameDiff, bbqTopDiff, bbqGrillDiff, bbqPanDiff, pavingDiff, noSpec, mildSpec, highSpec);
         binDraw(-12.0f, 0.0f, 0.5f, shader, binMetalDiff, binPanelDiff, binGenSignDiff, mildSpec, noSpec);
         binDraw(-12.0f, 0.0f, -0.5f, shader, binMetalDiff, binPanelDiff, binRecSignDiff, mildSpec, noSpec);
-        fountainDraw(-3.0f, 0.36f, -9.0f, shader, fountainBaseDiff, fountainTapDiff, noSpec, highSpec);
+        fountainDraw(-3.0f, 0.36f, -10.5f, shader, fountainBaseDiff, fountainTapDiff, noSpec, highSpec);
+        fountainDraw(10.5f, 0.36f, 10.5f, shader, fountainBaseDiff, fountainTapDiff, noSpec, highSpec);
+        pavingDraw(-9.0f, 0.0f, 3.0f, 2, 12, shader, pavingDiff, noSpec);
+        pavingDraw(-7.0f, 0.0f, 12.0f, 21, 2, shader, pavingDiff, noSpec);
+        pavingDraw(12.0f, 0.0f, -13.0f, 2, 25, shader, pavingDiff, noSpec);
+        pavingDraw(-9.0f, 0.0f, -13.0f, 21, 2, shader, pavingDiff, noSpec);
 
         // DRAW TREE BARRIERS
         for(int i = -14; i <= 14; i++)
@@ -1169,7 +1174,7 @@ void playFloorDraw(Shader shader, unsigned int playFloorDiff, unsigned int noSpe
     glm::mat4 floorObj = glm::mat4();
 
     floorObj = glm::translate(floorObj, glm::vec3(x, y, z));
-    floorObj = glm::scale(floorObj, glm::vec3(5.0f, -0.1f, -5.0f));
+    floorObj = glm::scale(floorObj, glm::vec3(6.0f, -0.1f, -6.0f));
 
     applyTexture(shader, floorObj, playFloorDiff, noSpec);
 }
@@ -1590,12 +1595,12 @@ void bbqDraw(Shader shader, unsigned int bbqBaseDiff, unsigned int bbqPanelDiff,
     {
         for(int j = 0; j < 5; j++)
         {
-            glm::mat4 floorObj = glm::mat4();
+            glm::mat4 pavingObj = glm::mat4();
             
-            floorObj = glm::translate(floorObj, glm::vec3(x - 4.0f + i, y, z - 2.0f + j));
-            floorObj = glm::scale(floorObj, glm::vec3(1.0f, 0.01f, 1.0f));
+            pavingObj = glm::translate(pavingObj, glm::vec3(x - 4.0f + i, y, z - 2.0f + j));
+            pavingObj = glm::scale(pavingObj, glm::vec3(1.0f, 0.01f, 1.0f));
 
-            applyTexture(shader, floorObj, pavingDiff, noSpec);
+            applyTexture(shader, pavingObj, pavingDiff, noSpec);
         }
     }
 }
@@ -1728,5 +1733,21 @@ void fountainDraw(float x, float y, float z, Shader shader, unsigned int fountai
         fixtureObj = glm::scale(fixtureObj, fixture_scalings[i]);
 
         applyTexture(shader, fixtureObj, fountainTapDiff, highSpec);
+    }
+}
+
+void pavingDraw(float x, float y, float z, int iMax, int jMax, Shader shader, unsigned int pavingDiff, unsigned int noSpec)
+{
+    for(int i = 0; i < iMax; i++)
+    {
+        for(int j = 0; j < jMax; j++)
+        {
+            glm::mat4 pavingObj = glm::mat4();
+            
+            pavingObj = glm::translate(pavingObj, glm::vec3(x + i, y, z + j));
+            pavingObj = glm::scale(pavingObj, glm::vec3(1.0f, 0.01f, 1.0f));
+
+            applyTexture(shader, pavingObj, pavingDiff, noSpec);
+        }
     }
 }

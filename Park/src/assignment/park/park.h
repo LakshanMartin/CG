@@ -43,6 +43,7 @@ void tableBenchDraw(Shader shader, unsigned int woodSlatsDiff, unsigned int pain
 void bbqDraw(Shader shader, unsigned int bbqBaseDiff, unsigned int bbqPanelDiff, unsigned int metalFrameDiff, unsigned int bbqTopDiff, unsigned int bbqGrillDiff, unsigned int bbqPanDiff, unsigned int pavingDiff, unsigned int noSpec, unsigned int mildSpec, unsigned int highSpec);
 void binDraw(float x, float y, float z, Shader shader, unsigned int binMetalDiff, unsigned int binPanelDiff, unsigned int binSignDiff, unsigned int mildSpec, unsigned int noSpec);
 void fountainDraw(float x, float y, float z, Shader shader, unsigned int fountainBaseDiff, unsigned int fountainTapDiff, unsigned int noSpec, unsigned int highSpec);
+void pavingDraw(float x, float y, float z, int iMax, int jMax, Shader shader, unsigned int pavingDiff, unsigned int noSpec);
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
 // ------------------------------------------------------------------
