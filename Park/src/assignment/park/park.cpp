@@ -1107,8 +1107,6 @@ void dogDraw(float x, float y, float z, Shader shader, unsigned int dogHeadDiff,
 
     glm::mat4 dogHeadObj = glm::mat4();
     glm::mat4 dogBodyObj = glm::mat4();
-    glm::mat4 dogLegs1Obj = glm::mat4();
-    glm::mat4 dogLegs2Obj = glm::mat4();
 
     if(playAnimation)
     {
@@ -1121,12 +1119,6 @@ void dogDraw(float x, float y, float z, Shader shader, unsigned int dogHeadDiff,
 
         dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x, y, z + 0.25f));
         dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
-
-        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x, 0.0f, z + 0.1f));
-        dogLegs1Obj = glm::scale(dogLegs1Obj, glm::vec3(0.20f, 0.2f, 0.05f));
-
-        dogLegs2Obj = glm::translate(dogLegs2Obj, glm::vec3(x, 0.0f, z + 0.4f));
-        dogLegs2Obj = glm::scale(dogLegs2Obj, glm::vec3(0.20f, 0.2f, 0.05f));
     }
     else
     {
@@ -1157,16 +1149,10 @@ void dogDraw(float x, float y, float z, Shader shader, unsigned int dogHeadDiff,
         dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 0.45f, y, z + 0.25f));
         dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
         dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleZ));
-
-        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.45f, y, z + 0.20f));
-        dogLegs1Obj = glm::scale(dogLegs1Obj, glm::vec3(0.20f, 0.2f, 0.05f));
-        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.75f, y - 1.0f, -legScaleZ * 1.25f));
     }
 
     applyTexture(shader, dogHeadObj, dogHeadDiff, noSpec);
     applyTexture(shader, dogBodyObj, dogBodyDiff, noSpec);
-    applyTexture(shader, dogLegs1Obj, dogHeadDiff, noSpec);
-    applyTexture(shader, dogLegs2Obj, dogHeadDiff, noSpec);
 }
 
 void birdDraw(float x, float y, float z, Shader shader, unsigned int birdDiff,unsigned int noSpec)
