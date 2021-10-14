@@ -23,6 +23,7 @@ void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 void update_delay();
 void applyTexture(Shader shader, glm::mat4 obj, unsigned int diff, unsigned int spec);
+bool within_Boundaries();
 
 // SKY BOX
 void skyDraw(Shader shader, unsigned int skyDiff, unsigned int noSpec);

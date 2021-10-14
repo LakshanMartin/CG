@@ -3,8 +3,12 @@
 // SETTING
 const unsigned int SCR_WIDTH = 1000;
 const unsigned int SCR_HEIGHT = 800;
-const float LOWER_BOUNDS = 0.15f;
-const float UPPER_BOUNDS = 10.0f;
+const float X_LOWER_BOUNDS = -14.0f;
+const float X_UPPER_BOUNDS = 14.0f;
+const float Y_LOWER_BOUNDS = 0.15f;
+const float Y_UPPER_BOUNDS = 15.0f;
+const float Z_LOWER_BOUNDS = -14.0f;
+const float Z_UPPER_BOUNDS = 14.0f;
 
 // CAMERA
 Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
@@ -180,8 +184,12 @@ int main()
     // shader configuration
     // --------------------
     shader.use();
-    shader.setInt("material.diffuse", 0);
-    shader.setInt("material.specular", 1);
+    // shader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    // shader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    // // shader.setInt("material.diffuse", 0);
+    // shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    // // shader.setInt("material.specular", 1);
+    // shader.setFloat("material.shininess", 32.0f);
 
 
     // render loop
@@ -217,7 +225,7 @@ int main()
             shader.setVec3("light.position", camera.Position);
         }
 
-        shader.setVec3("light.direction", camera.Position);
+        // shader.setVec3("light.direction", camera.Position);
         shader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
         shader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 
@@ -225,7 +233,7 @@ int main()
         // we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
         // each environment and lighting type requires some tweaking to get the best out of your environment.
         shader.setVec3("light.ambient", amb, amb, amb);
-        shader.setVec3("light.diffuse", 3.5f, 3.5f, 3.5f);
+        shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         shader.setFloat("light.constant", 1.0f);
         shader.setFloat("light.linear", linearAtten[attenIndex]);
@@ -249,6 +257,7 @@ int main()
 
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("projection", projection);
+        // shader.setVec3("view", camera.Position);
         shader.setMat4("view", view);
 
         // world transformation
@@ -312,41 +321,60 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
+    float cameraSpeed;
+    glm::vec3 beforeMovement = camera.Position;
+
     // [ESC] - Quit 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, true);
-
-    float cameraSpeed;
+    }
 
     // [LShift] - Hold to increase camera speed
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+    {
         cameraSpeed =  1.0f * deltaTime;
+    }
     else
+    {
         cameraSpeed = 1.0f * deltaTime * 2;
+    }
 
     // [W] - Move forwards
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && camera.Position.y > LOWER_BOUNDS && camera.Position.y < UPPER_BOUNDS)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(FORWARD, cameraSpeed);
-    
+    }
+
     // [S] - Move backwards
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && camera.Position.y > LOWER_BOUNDS && camera.Position.y < UPPER_BOUNDS)
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(BACKWARD, cameraSpeed);
-    
+    }
+
     // [A] - Straif left
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(LEFT, cameraSpeed);
-    
+    }
+
     // [D] - Straif right
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(RIGHT, cameraSpeed);
-    
+    }
+
     // [SPACEBAR] - Move vertically up
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && camera.Position.y < UPPER_BOUNDS)
-		camera.Position.y = camera.Position.y + 2.0f * cameraSpeed;
-	
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+    	camera.Position.y = camera.Position.y + 2.0f * cameraSpeed;
+    }
+
     // [X] - Move vertically down
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && camera.Position.y > LOWER_BOUNDS)
-		camera.Position.y = camera.Position.y - 2.0f * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+	{
+    	camera.Position.y = camera.Position.y - 2.0f * cameraSpeed;
+    }
 
     // [F] - Toggle light to follow/stay
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && followStayTimer == 0)
@@ -362,6 +390,11 @@ void processInput(GLFWwindow *window)
         {
             lightStay = false;
         }
+    }
+
+    if(!within_Boundaries())
+    {
+        camera.Position = beforeMovement;
     }
 
     // [K] - Reduce light brightness 
@@ -461,6 +494,20 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastY = ypos;
 
     camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+bool within_Boundaries()
+{
+    bool valid = false;
+
+    if(camera.Position.y < Y_UPPER_BOUNDS && camera.Position.y > Y_LOWER_BOUNDS &&
+    camera.Position.x < X_UPPER_BOUNDS && camera.Position.x > X_LOWER_BOUNDS &&
+    camera.Position.z < Z_UPPER_BOUNDS && camera.Position.z > Z_LOWER_BOUNDS)
+    {
+        valid = true;
+    }
+
+    return valid;
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -1111,15 +1158,15 @@ void dogDraw(float x, float y, float z, Shader shader, unsigned int dogHeadDiff,
         dogBodyObj = glm::scale(dogBodyObj, glm::vec3(0.25f, 0.20f, 0.35f));
         dogBodyObj = glm::translate(dogBodyObj, glm::vec3(x - 1.2f, y, -bodyScaleZ));
 
-        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.45f, y, z + 0.25f));
+        dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.45f, y, z + 0.20f));
         dogLegs1Obj = glm::scale(dogLegs1Obj, glm::vec3(0.20f, 0.2f, 0.05f));
         dogLegs1Obj = glm::translate(dogLegs1Obj, glm::vec3(x - 0.75f, y - 1.0f, -legScaleZ * 1.25f));
     }
 
     applyTexture(shader, dogHeadObj, dogHeadDiff, noSpec);
     applyTexture(shader, dogBodyObj, dogBodyDiff, noSpec);
-    // applyTexture(shader, dogLegs1Obj, dogHeadDiff, noSpec);
-    // applyTexture(shader, dogLegs2Obj, dogHeadDiff, noSpec);
+    applyTexture(shader, dogLegs1Obj, dogHeadDiff, noSpec);
+    applyTexture(shader, dogLegs2Obj, dogHeadDiff, noSpec);
 }
 
 void birdDraw(float x, float y, float z, Shader shader, unsigned int birdDiff,unsigned int noSpec)
@@ -1136,8 +1183,7 @@ void birdDraw(float x, float y, float z, Shader shader, unsigned int birdDiff,un
         // Original position of bird flying up and down 
         birdObj = glm::translate(birdObj, glm::vec3(x, y, z));
         birdObj = glm::scale(birdObj, glm::vec3(0.1f, 0.1f, 0.15f)); // Scaling
-        birdObj = glm::translate(birdObj, glm::vec3(1.0, scaleY, 1.0)); // Up and down animation
-        
+        birdObj = glm::translate(birdObj, glm::vec3(1.0, scaleY, 1.0)); // Up and down animation        
     }
     else
     {

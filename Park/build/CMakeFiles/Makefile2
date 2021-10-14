@@ -75,8 +75,8 @@ clean: CMakeFiles/STB_IMAGE.dir/clean
 # Target rules for target CMakeFiles/assignment__park.dir
 
 # All Build rule for target.
-CMakeFiles/assignment__park.dir/all: CMakeFiles/STB_IMAGE.dir/all
 CMakeFiles/assignment__park.dir/all: CMakeFiles/GLAD.dir/all
+CMakeFiles/assignment__park.dir/all: CMakeFiles/STB_IMAGE.dir/all
 	$(MAKE) -f CMakeFiles/assignment__park.dir/build.make CMakeFiles/assignment__park.dir/depend
 	$(MAKE) -f CMakeFiles/assignment__park.dir/build.make CMakeFiles/assignment__park.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/CMakeFiles --progress-num=5,6 "Built target assignment__park"
