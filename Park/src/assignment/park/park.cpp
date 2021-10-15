@@ -96,7 +96,7 @@ int main()
     unsigned int noSpec = loadTexture(FileSystem::getPath("resources/textures/no_spec.png").c_str());
     unsigned int mildSpec = loadTexture(FileSystem::getPath("resources/textures/mild_spec.png").c_str());
     unsigned int highSpec = loadTexture(FileSystem::getPath("resources/textures/high_spec.png").c_str());
-    unsigned int grassDiff = loadTexture(FileSystem::getPath("resources/textures/grass.jpg").c_str());
+    unsigned int grassDiff = loadTexture(FileSystem::getPath("resources/textures/grass.png").c_str());
     unsigned int bballCourtDiff = loadTexture(FileSystem::getPath("resources/textures/bball_court.png").c_str());
     unsigned int treeTopDiff = loadTexture(FileSystem::getPath("resources/textures/tree_leaves.jpg").c_str());
     unsigned int treeTrunkDiff = loadTexture(FileSystem::getPath("resources/textures/tree_trunk.png").c_str());
@@ -611,12 +611,17 @@ void skyDraw(Shader shader, unsigned int skyDiff, unsigned int noSpec)
 
 void grassDraw(Shader shader, unsigned int grassDiff, unsigned int mildSpec)
 {
-		glm::mat4 grassObj = glm::mat4();
+    for(int i = -15; i < 16; i++)
+    {
+        for(int j = -15; j < 16; j++)
+        {
+            glm::mat4 grassObj = glm::mat4();
 
-		grassObj = glm::translate(grassObj, glm::vec3(0.0f, -0.51f, 0.0f));
-		grassObj = glm::scale(grassObj, glm::vec3(30.0f, 1.0f, 30.0f));
+            grassObj = glm::translate(grassObj, glm::vec3(i, -0.51f, j));
 
-        applyTexture(shader, grassObj, grassDiff, mildSpec);
+            applyTexture(shader, grassObj, grassDiff, mildSpec);
+        }
+    }
 }
 
 void bballCourtDraw(Shader shader, unsigned int courtDiff, unsigned int noSpec)
