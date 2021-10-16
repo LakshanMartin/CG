@@ -618,6 +618,7 @@ void grassDraw(Shader shader, unsigned int grassDiff, unsigned int mildSpec)
             glm::mat4 grassObj = glm::mat4();
 
             grassObj = glm::translate(grassObj, glm::vec3(i, -0.51f, j));
+            grassObj = glm::rotate(grassObj, glm::radians(180.0f), glm::vec3(0.0, 1.0, 0.0));
 
             applyTexture(shader, grassObj, grassDiff, mildSpec);
         }
@@ -1413,7 +1414,7 @@ void gazeboDraw(Shader shader, unsigned int metalFrameDiff, unsigned int gazeboR
         applyTexture(shader, hZFrameObj, metalFrameDiff, highSpec);
     }
 
-    // Horizontal frame (x-frame) transformations
+    // Horizontal frame (x-axis) transformations
     glm::vec3 hXFrame_translations[] = {
         glm::vec3(x, y + 3.25f, z),
         glm::vec3(x, y + 3.25f, z + 5.0f),
