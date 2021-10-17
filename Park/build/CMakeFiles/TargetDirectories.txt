@@ -1,5 +1,0 @@
-/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/CMakeFiles/rebuild_cache.dir
-/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/CMakeFiles/assignment__park.dir
-/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/CMakeFiles/edit_cache.dir
-/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/CMakeFiles/GLAD.dir
-/home/lucky/Documents/Uni/CG/Assignments/Assignment2/Park/build/CMakeFiles/STB_IMAGE.dir
