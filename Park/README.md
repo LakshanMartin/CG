@@ -33,7 +33,7 @@ In order to compile the application, please enter the following commands from th
 
 ```bash
 cd build/
-cmake..
+cmake ..
 make
 ```
 
