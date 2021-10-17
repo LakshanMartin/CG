@@ -60,7 +60,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Neighborhood Park", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -110,7 +110,6 @@ int main()
     unsigned int manLegsDiff = loadTexture(FileSystem::getPath("resources/textures/pants.png").c_str());
     unsigned int manTopBackDiff = loadTexture(FileSystem::getPath("resources/textures/man_top_back.png").c_str());
     unsigned int manTopDiff = loadTexture(FileSystem::getPath("resources/textures/man_top.png").c_str());
-    unsigned int manArmDiff = loadTexture(FileSystem::getPath("resources/textures/man_arm.png").c_str());
     unsigned int manNeckDiff = loadTexture(FileSystem::getPath("resources/textures/man_neck.png").c_str());
     unsigned int manFaceDiff = loadTexture(FileSystem::getPath("resources/textures/man_face.png").c_str());
     unsigned int manFace2Diff = loadTexture(FileSystem::getPath("resources/textures/man_face2.png").c_str());
@@ -272,7 +271,7 @@ int main()
         bballCourtDraw(shader, bballCourtDiff, noSpec);
         bballRingDraw(false, 0.0f, 1.0f, -5.5f, shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
         bballRingDraw(true, 0.0f, 1.0f, 5.5f,  shader, bballPoleDiff, bballBoardFrontDiff, bballBoardBackDiff, bballBoardEdgeDiff, bballRingDiff, highSpec, mildSpec);
-        manDraw(-0.12f, 0.0f, -1.5f, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manArmDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
+        manDraw(-0.12f, 0.0f, -1.5f, shader, manShoeDiff, manLegsDiff, manTopBackDiff, manTopDiff, manNeckDiff, manFaceDiff, manFace2Diff, manHeadTopDiff, manHeadBackDiff, manHeadLeftDiff, manHeadRightDiff, noSpec);
         bballDraw(0.0f, 0.3f, -1.5f, shader, bballDiff, mildSpec);
         dogDraw(3.0f, 0.2f, -3.0f, shader, dogHeadDiff, dogBodyDiff, noSpec);
         birdDraw(2.9f, 1.0f, -3.0f, shader, birdDiff, noSpec);
@@ -869,7 +868,7 @@ void bballRingDraw(bool isSecond, float x, float y, float z, Shader shader, unsi
     applyTexture(shader, ringRightObj, bballRingDiff, highSpec);
 }
 
-void manDraw(float x, float y, float z, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manArmDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manFace2Diff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
+void manDraw(float x, float y, float z, Shader shader, unsigned int manShoeDiff, unsigned int manLegsDiff, unsigned int manTopBackDiff, unsigned int manTopDiff, unsigned int manNeckDiff, unsigned int manFaceDiff, unsigned int manFace2Diff, unsigned int manHeadTopDiff, unsigned int manHeadBackDiff, unsigned int manHeadLeftDiff, unsigned int manHeadRightDiff,unsigned int noSpec)
 {
     glm::mat4 leftShoeObj = glm::mat4();
     glm::mat4 rightShoeObj = glm::mat4();
@@ -1091,7 +1090,7 @@ void bballDraw(float x, float y, float z, Shader shader, unsigned int bballDiff,
         {
             ballDistance--;
         }
-
+        
         scaleAmount = ballDistance * 0.2f;
 
         bballObj = glm::translate(bballObj, glm::vec3(x, 0.08f, z - 0.15f));
